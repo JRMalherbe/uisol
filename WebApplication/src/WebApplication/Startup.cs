@@ -48,15 +48,17 @@ namespace UIS
             app.UseDefaultFiles();
             app.UseMiddleware<BasicAuthentication>();
             app.UseStaticFiles();
+            app.Use(async (context, next) =>
+            {
+                if (!Path.HasExtension(context.Request.Path.Value) && !context.Request.Path.ToString().StartsWith("/api/") && context.Request.HttpContext.Request.Headers["X-Requested-With"] != "XMLHttpRequest")
+                {
+                    await context.Response.WriteAsync(File.ReadAllText("wwwroot\\index.html"));
+                }
+
+                await next();
+            });
             app.UseMvc();
             db.Database.Migrate();
-
-            /* James
-            app.Run(async (context) =>
-            {
-                await context.Response.WriteAsync("Hello World!");
-            });
-            */
         }
     }
 }

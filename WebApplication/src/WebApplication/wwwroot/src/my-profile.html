@@ -1,0 +1,55 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="shared-styles.html">
+<dom-module id="my-profile">
+    <template>
+        <style include="shared-styles">
+            :host {
+                display: block;
+                padding: 10px;
+            }
+        </style>
+        <div class="card">
+            <div class="circle">3</div>
+            <h1>Reports</h1>
+            <p>Modus commodo minimum eum te, vero utinam assueverit per eu.</p>
+            <p>Ea duis bonorum nec, falli paulo aliquid ei eum.Has at minim mucius aliquam, est id tempor laoreet.Pro saepe pertinax ei, ad pri animal labores suscipiantur.</p>
+        </div>
+        <aksie-nuut id="aksie" entiteit-naam="Person"></aksie-nuut>
+    </template>
+    <script>
+    Polymer({
+      is: 'my-profile',
+
+      load: function () {
+          var self = this
+
+          var pad = location.pathname
+          console.log('ready', 'persoon', pad)
+          if (!pad.startsWith("/profile/"))
+              return
+
+          var id = pad.substring(9, pad.length)
+          console.log("id", id)
+          this.$.aksie.kry(id, function (xhr) {
+              self.item = JSON.parse(xhr.response)
+          })
+      },
+
+      attributeChanged: function (name, type) {
+          if (name == 'class' && this.getAttribute(name) == 'iron-selected')
+              this.load()
+          console.log(this.localName + '#' + this.id + ' attribute ' + name +
+            ' was changed to ' + this.getAttribute(name));
+      }
+    });
+    </script>
+</dom-module>

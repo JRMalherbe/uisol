@@ -61,14 +61,18 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                    data="{{routeData}}"
                    tail="{{subroute}}"></app-route>
         <app-drawer-layout fullbleed>
-            <!-- Drawer content -->
+        <app-route route="{{subroute}}"
+                    pattern="/:id"
+                    data="{{subrouteData}}">
+        </app-route>
+       <!-- Drawer content -->
             <app-drawer id="drawer">
                 <app-toolbar>Menu</app-toolbar>
                 <iron-selector selected="[[page]]" attr-for-selected="name" class="drawer-list" role="navigation">
-                    <a name="view1" href="/view1">Login</a>
-                    <a name="view2" href="/view2">Reports</a>
-                    <a name="view3" href="/view3">Profile</a>
-                    <a name="test" href="/test">Test View</a>
+                    <a name="login" href="/login">Login</a>
+                    <a name="home" href="/home">Home</a>
+                    <a name="reports" href="/reports">Reports</a>
+                    <a name="profile" href="/profile">Profile</a>
                 </iron-selector>
             </app-drawer>
             <!-- Main content -->
@@ -83,10 +87,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                             attr-for-selected="name"
                             fallback-selection="view404"
                             role="main">
-                    <my-view1 name="view1"></my-view1>
-                    <my-view2 name="view2"></my-view2>
-                    <my-view3 name="view3"></my-view3>
-                    <my-test name="test"></my-test>
+                    <my-login name="login"></my-login>
+                    <my-home name="home"></my-home>
+                    <my-reports name="reports"></my-reports>
+                    <my-profile name="profile"></my-profile>
                     <my-view404 name="view404"></my-view404>
                 </iron-pages>
             </app-header-layout>
@@ -109,8 +113,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             ],
 
             _routePageChanged: function (page) {
-                this.page = page || 'view1';
-
+                this.page = page || 'login';
+                console.log('routePageChanged',page);
                 if (!this.$.drawer.persistent) {
                     this.$.drawer.close();
                 }
@@ -123,6 +127,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 // Load page import on demand. Show 404 page if fails
                 var resolvedPageUrl = this.resolveUrl('my-' + page + '.html');
                 this.importHref(resolvedPageUrl, null, this._showPage404, true);
+
                 console.log("Page Changed");
                 var oReq = new XMLHttpRequest();
                 oReq.addEventListener("load", reqListener);
