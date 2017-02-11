@@ -1,0 +1,78 @@
+﻿<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="shared-styles.html">
+
+<dom-module id="aksie-fout">
+    <template>
+        <style include="shared-styles">
+            :host {
+                display: block;
+                padding: 16px;
+            }
+
+            p.fout {
+                color: var(--fout-kleur);
+            }
+
+            p.boodskap {
+                font-weight: bolder;
+            }
+        </style>
+        <p id="boodskap"></p>
+    </template>
+    <script>
+        Polymer({
+            is: 'aksie-fout',
+            properties: {
+                aksie: String,
+                foute: Object
+            },
+            ready: function () {
+                if (!this.foute)
+                    this.foute = {}
+            },
+            xhr: function (o) {
+                var boodskap = this.$.boodskap
+                boodskap.className = o.status >= 400 ? "fout" : "boodskap"
+                if (this.foute && this.foute[o.status]) {
+                    boodskap.innerHTML = this.foute[o.status]
+                    return
+                }
+                switch (o.status) {
+                    case 201:
+                        {
+                            boodskap.innerHTML = "Nuwe item is gemaak."
+                            return
+                        }
+                    case 401:
+                        {
+                            boodskap.innerHTML = "Registreer asseblief en teken aan."
+                            return
+                        }
+                    case 403:
+                        {
+                            boodskap.innerHTML = "Jy is tans nie gemagtig om dit te doen nie."
+                            return
+                        }
+                    case 404:
+                        {
+                            boodskap.innerHTML = "Kon nie die ding kry nie."
+                            return
+                        }
+                }
+                if (!o.status || (o.status >= 200 && o.status < 300)) {
+                    boodskap.innerHTML = ""
+                    return
+                }
+                if (o.status >= 400 && o.status < 500) {
+                    boodskap.innerHTML = "Maak asseblief seker jy het alles reg ingevul."
+                    return
+                }
+                if (o.status >= 500) {
+                    boodskap.innerHTML = "Jammer, maar iets het fout gegaan op die Web. Probeer gerus weer."
+                    return
+                }
+                boodskap.innerHTML = "Jammer, ons het die vreemde antwoord kode [" + o.status + "] gekry."
+            }
+        });
+    </script>
+</dom-module>

@@ -1,0 +1,63 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="shared-styles.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="login/login-form.html">
+<link rel="import" href="aksie-nuut.html">
+<link rel="import" href="aksie-fout.html">
+
+<dom-module id="my-user-login">
+    <!-- Defines the element's style and local DOM -->
+    <template>
+        <style include="shared-styles">
+            :host {
+                display: block;
+                padding: 16px;
+            }
+
+            paper-button {
+                color: var(--vlag-blou);
+                --paper-button-ink-color: var(--vlag-oranje);
+            }
+        </style>
+
+        <div class="card">
+            <h2>Login</h2>
+            <p>Please sign in to make use of our client portal</p>
+            <aksie-fout id="fout" foute="{{foute}}"></aksie-fout>
+            <login-form item="{{item}}" verhoed-invoer="{{verhoedInvoer}}"></login-form>
+            <paper-button raised on-tap="hanteerKlik" disabled="[[verhoedInvoer]]">Registreer</paper-button>
+            <aksie-nuut id="nuut" item="{{item}}" verhoed-invoer="{{verhoedInvoer}}" entiteit-naam="Persoon"></aksie-nuut>
+        </div>
+    </template>
+    <!-- Creates the element's prototype and registers it -->
+    <script>
+        Polymer({
+            is: 'my-user-login',
+            properties: {
+                verhoedInvoer: {
+                    type: Boolean,
+                    value: false
+                },
+                item: Object,
+                xhr: Object,
+                foute: Object
+            },
+            ready: function () {
+                this.item = {}
+                this.foute = {
+                    403: "Jy is tans nie gemagtig om 'n nuwe kontak te maak nie"
+                }
+            },
+            hanteerKlik: function () {
+                var self = this
+                this.$.nuut.aksie(function (xhr) {
+                    if (xhr.status >= 200 && xhr.status < 300) {
+                        location.href = "/kontakte"
+                        return
+                    }
+                    self.$.fout.xhr(xhr)
+                })
+            }
+        });
+    </script>
+</dom-module>

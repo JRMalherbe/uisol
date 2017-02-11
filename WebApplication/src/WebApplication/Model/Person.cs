@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace WebApplication3
+namespace UIS
 {
-    public class Persoon
+    public class Person
     {
         private static int _id = 0;
 
-        public Persoon()
+        public Person()
         {
             Id = ++_id;
         }

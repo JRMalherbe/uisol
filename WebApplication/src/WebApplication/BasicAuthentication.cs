@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace WebApplication3
+namespace UIS
 {
     public class BasicAuthentication
     {

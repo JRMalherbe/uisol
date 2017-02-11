@@ -10,23 +10,33 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 <link rel="import" href="../bower_components/polymer/polymer.html">
 <link rel="import" href="shared-styles.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="login/login-form.html">
+<link rel="import" href="aksie-nuut.html">
+<link rel="import" href="aksie-fout.html">
 
 <dom-module id="my-view1">
   <template>
-    <style include="shared-styles">
-      :host {
-        display: block;
+      <style include="shared-styles">
+          :host {
+              display: block;
+              padding: 16px;
+          }
 
-        padding: 10px;
-      }
-    </style>
+          paper-button {
+              color: var(--vlag-blou);
+              --paper-button-ink-color: var(--vlag-oranje);
+          }
+      </style>
 
-    <div class="card">
-      <div class="circle">1</div>
-      <h1>View One</h1>
-      <p>Ut labores minimum atomorum pro. Laudem tibique ut has.</p>
-      <p>Lorem ipsum dolor sit amet, per in nusquam nominavi periculis, sit elit oportere ea.Lorem ipsum dolor sit amet, per in nusquam nominavi periculis, sit elit oportere ea.Cu mei vide viris gloriatur, at populo eripuit sit.</p>
-    </div>
+      <div class="card">
+          <h2>Login</h2>
+          <p>Please sign in to make use of our client portal</p>
+          <aksie-fout id="fout" foute="{{foute}}"></aksie-fout>
+          <login-form item="{{item}}" verhoed-invoer="{{verhoedInvoer}}"></login-form>
+          <paper-button raised on-tap="hanteerKlik" disabled="[[verhoedInvoer]]">Registreer</paper-button>
+          <aksie-nuut id="nuut" item="{{item}}" verhoed-invoer="{{verhoedInvoer}}" entiteit-naam="Persoon"></aksie-nuut>
+      </div>
   </template>
 
   <script>

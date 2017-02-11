@@ -1,0 +1,41 @@
+﻿<link rel="import" href="../bower_components/polymer/polymer.html">
+
+<dom-module id="aksie-nuut">
+    <template>
+    </template>
+    <script>
+        Polymer({
+            is: 'aksie-nuut',
+            properties: {
+                item: Object,
+                verhoedInvoer: {
+                    type: Boolean,
+                    value: false,
+                    notify: true
+                },
+                entiteitNaam: String
+            },
+            aksie: function(fun) {
+                console.log(this.item);
+                this.verhoedInvoer = true
+                var xhr = new XMLHttpRequest()
+                xhr.addEventListener("load", reqListener)
+                xhr.open("POST", "/api/" + this.entiteitNaam)
+                xhr.setRequestHeader("Content-Type", "application/json")
+                //xhr.setRequestHeader("Authorization", "Basic " + btoa("username1:password2"));
+                xhr.send(JSON.stringify(this.item))
+
+                var self = this
+                function reqListener() {
+                    self.verhoedInvoer = false
+                    fun(this)
+                    //self.importHref('/kontakte', null, null, true);
+                    //self.fire("requestChangeRoute", {
+                    //    route: "/kontakte"
+                    //});
+                    //location.href = self.navigeer;
+                }
+            }
+        });
+    </script>
+</dom-module>
