@@ -10,10 +10,12 @@ namespace UIS
     public class BasicAuthentication
     {
         private readonly RequestDelegate _next;
+        private readonly UISContext _db;
 
-        public BasicAuthentication(RequestDelegate next)
+        public BasicAuthentication(RequestDelegate next, UISContext db)
         {
             _next = next;
+            _db = db;
         }
 
         public async Task Invoke(HttpContext context)
@@ -37,10 +39,16 @@ namespace UIS
 
             int seperatorIndex = usernamePassword.IndexOf(':');
 
-            var username = usernamePassword.Substring(0, seperatorIndex);
-            var password = usernamePassword.Substring(seperatorIndex + 1);
+            string username = usernamePassword.Substring(0, seperatorIndex);
+            string password = usernamePassword.Substring(seperatorIndex + 1);
 
-            if (username == "username1" && password == "password2")
+            var sha2 = System.Security.Cryptography.SHA256.Create();
+            var hash = sha2.ComputeHash(Encoding.UTF8.GetBytes(password));
+            var pswhash = BitConverter.ToString(hash).Replace("-", "");
+
+            Login login = _db.Login.Find(username);
+            if (pswhash == login.Password)
+            //if (username == "username1" && password == "password2")
                 await _next.Invoke(context);
             else
                 context.Response.StatusCode = 403;

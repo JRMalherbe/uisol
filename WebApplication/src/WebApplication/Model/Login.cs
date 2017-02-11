@@ -10,6 +10,7 @@ namespace UIS
     {
         [Key, StringLength(100)]
         public string Email { get; set; }
+        [StringLength(80)]
         public string Password { get; set; }
     }
 }

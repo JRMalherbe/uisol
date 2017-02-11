@@ -7,41 +7,67 @@ The complete set of contributors may be found at http://polymer.github.io/CONTRI
 Code distributed by Google as part of the polymer project is also
 subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
 -->
-
 <link rel="import" href="../bower_components/polymer/polymer.html">
 <link rel="import" href="shared-styles.html">
+<link rel="import" href="../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../bower_components/paper-input/paper-textarea.html">
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
-<link rel="import" href="login/login-form.html">
 <link rel="import" href="aksie-nuut.html">
 <link rel="import" href="aksie-fout.html">
-
 <dom-module id="my-login">
-  <template>
-      <style include="shared-styles">
-          :host {
-              display: block;
-              padding: 16px;
-          }
+    <template>
+        <style include="shared-styles">
+            :host {
+                display: block;
+                padding: 16px;
+            }
 
-          paper-button {
-              color: var(--vlag-blou);
-              --paper-button-ink-color: var(--vlag-oranje);
-          }
-      </style>
+            paper-button {
+                color: var(--vlag-blou);
+                --paper-button-ink-color: var(--vlag-oranje);
+            }
+        </style>
 
-      <div class="card">
-          <h2>Login</h2>
-          <p>Please sign in to make use of our client portal</p>
-          <aksie-fout id="fout" foute="{{foute}}"></aksie-fout>
-          <login-form item="{{item}}" verhoed-invoer="{{verhoedInvoer}}"></login-form>
-          <paper-button raised on-tap="hanteerKlik" disabled="[[verhoedInvoer]]">Registreer</paper-button>
-          <aksie-nuut id="nuut" item="{{item}}" verhoed-invoer="{{verhoedInvoer}}" entiteit-naam="Persoon"></aksie-nuut>
-      </div>
-  </template>
+        <div class="card">
+            <h2>Login</h2>
+            <p>Please sign in to make use of our client portal</p>
+            <paper-input label="Email" value="{{item.Email}}"></paper-input>
+            <paper-input label="Password" value="{{item.Password}}"></paper-input>
+            <paper-button raised on-tap="hanteerKlik">Login</paper-button>
+            <aksie-fout id="fout" foute="{{foute}}"></aksie-fout>
+            <aksie-nuut id="nuut" item="{{item}}" entiteit-naam="Login"></aksie-nuut>
+        </div>
+    </template>
+    <script>
+        Polymer({
+            is: 'my-login',
+            properties: {
+                verhoedInvoer: {
+                    type: Boolean,
+                    value: false
+                },
+                item: {
+                    type: Object,
+                    value: {}
+                },
+                xhr: Object,
+                foute: Object
+            },
+            hanteerKlik: function () {
+                console.log('login', this.item)
+                window.gebruiker = this.item.Email;
+                window.wagwoord = this.item.Password;
 
-  <script>
-    Polymer({
-      is: 'my-login',
-    });
-  </script>
+                var self = this
+                this.$.nuut.kry(this.item.Email, function (xhr) {
+                    if (xhr.status >= 200 && xhr.status < 300) {
+                        window.history.pushState({}, null, '/reports');
+                        window.dispatchEvent(new CustomEvent('location-changed'));
+                        return
+                    }
+                    self.$.fout.xhr(xhr)
+                })
+            },
+        });
+    </script>
 </dom-module>

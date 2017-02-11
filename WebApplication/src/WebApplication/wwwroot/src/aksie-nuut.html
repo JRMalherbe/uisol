@@ -15,18 +15,45 @@
                 },
                 entiteitNaam: String
             },
-            aksie: function(fun) {
-                console.log(this.item);
+            maak: function (fun) {
+                this._aksie("post", null, fun)
+            },
+            kry: function (id, fun) {
+                this._aksie("get", id, fun)
+            },
+            vervang: function(id, fun) {
+                this._aksie("put", id, fun)
+            },
+            verander: function(id, fun) {
+                this._aksie("patch", id, fun)
+            },
+            veeuit: function(id, fun) {
+                this._aksie("delete", id, fun)
+            },
+            _aksie: function (werkwoord, id, fun) {
                 this.verhoedInvoer = true
                 var xhr = new XMLHttpRequest()
-                xhr.addEventListener("load", reqListener)
-                xhr.open("POST", "/api/" + this.entiteitNaam)
-                xhr.setRequestHeader("Content-Type", "application/json")
-                //xhr.setRequestHeader("Authorization", "Basic " + btoa("username1:password2"));
-                xhr.send(JSON.stringify(this.item))
+                xhr.addEventListener("load", klaar)
+                var url = "/api/" + this.entiteitNaam
+                if (id)
+                    url += "/" + id
+                xhr.open(werkwoord, url)
+
+                var json = null
+                if ("get" == werkwoord)
+                    xhr.setRequestHeader("Accept", "application/json")
+                else if ("post" == werkwoord || "put" == werkwoord || "patch" == werkwoord) {
+                    json = JSON.stringify(this.item) 
+                    xhr.setRequestHeader("Content-Type", "application/json")
+                }
+
+                var basic = "username1:password2"
+                basic = window.gebruiker + ":" + window.wagwoord
+                xhr.setRequestHeader("Authorization", "Basic " + btoa(basic));
+                xhr.send(json)
 
                 var self = this
-                function reqListener() {
+                function klaar() {
                     self.verhoedInvoer = false
                     fun(this)
                     //self.importHref('/kontakte', null, null, true);
@@ -35,6 +62,7 @@
                     //});
                     //location.href = self.navigeer;
                 }
+
             }
         });
     </script>

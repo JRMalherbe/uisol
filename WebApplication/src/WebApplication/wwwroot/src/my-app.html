@@ -122,7 +122,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
             _pageChanged: function (page) {
                 function reqListener() {
-                    console.log(this.response);
+                    //console.log(this.response);
                 }
                 // Load page import on demand. Show 404 page if fails
                 var resolvedPageUrl = this.resolveUrl('my-' + page + '.html');
@@ -132,7 +132,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 var oReq = new XMLHttpRequest();
                 oReq.addEventListener("load", reqListener);
                 oReq.open("GET", "/api/Person");
-                oReq.setRequestHeader("Authorization", "Basic " + btoa("username1:password2"));
+                var basic = "username1:password2"
+                basic = window.gebruiker + ":" + window.wagwoord
+                oReq.setRequestHeader("Authorization", "Basic " + btoa(basic));
                 oReq.send();
             },
 
