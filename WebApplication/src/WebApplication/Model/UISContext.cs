@@ -10,5 +10,8 @@ namespace UIS
     {
         public UISContext(DbContextOptions<UISContext> options) : base(options)
         { }
+
+        public DbSet<Login> Login { get; set; }
+        public DbSet<Client> Client { get; set; }
     }
 }
