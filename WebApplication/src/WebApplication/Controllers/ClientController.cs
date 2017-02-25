@@ -16,9 +16,25 @@ namespace UIS.Controllers
         private static HttpClient _client = new HttpClient();
         // GET: api/values
         [HttpGet]
-        public IEnumerable<string> Get()
+        public IEnumerable<Client> Get()
         {
-            return new string[] { "value1", "value2" };
+            string userName = HttpContext.Request.Headers["UserName"].ToString();
+            string userRole = HttpContext.Request.Headers["UserRole"].ToString();
+
+            string url = "http://localhost:50209/api/Customer/" + Convert.ToBase64String(Encoding.ASCII.GetBytes(userName));
+            if (userRole == "Admin")
+                url = "http://localhost:50209/api/Customer";
+
+            List<Client> clients = new List<Client>();
+
+            HttpResponseMessage result = _client.GetAsync(url).Result;
+            string body = "";
+            if (result.IsSuccessStatusCode)
+            {
+                body = result.Content.ReadAsStringAsync().Result;
+            }
+
+            return clients;
         }
 
         // GET api/values/5
@@ -32,8 +48,8 @@ namespace UIS.Controllers
             //string something = Encoding.ASCII.GetString(toBytes);
             //WebUtility.UrlEncode();
             //WebUtility.UrlDecode();
-            string url = "http://localhost:50209/odata/Customer('" + Convert.ToBase64String(Encoding.ASCII.GetBytes(userName)) + "')";
-            //string url = "http://localhost:50209/odata/Customer('" + id + "')";
+            string url = "http://localhost:50209/api/Customer/" + Convert.ToBase64String(Encoding.ASCII.GetBytes(userName));
+            //string url = "http://localhost:50209/api/Customer('" + id + "')";
             HttpResponseMessage result = _client.GetAsync(url).Result;
             string body = "";
             if (result.IsSuccessStatusCode)

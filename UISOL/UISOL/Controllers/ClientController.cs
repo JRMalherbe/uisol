@@ -35,6 +35,7 @@ namespace UISOL
         //[EnableQuery]
         public IHttpActionResult GetClient(ODataQueryOptions<Customer> queryOptions)
         {
+
             List<Customer> clients = new List<Customer>();
 
             using (OleDbConnection connection = new OleDbConnection(ConfigurationManager.AppSettings["UISContext"]))
@@ -237,7 +238,6 @@ namespace UISOL
 
             return response;
         }
-
 
         protected override void Dispose(bool disposing)
         {

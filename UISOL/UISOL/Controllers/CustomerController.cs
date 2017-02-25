@@ -1,49 +1,49 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
-using System.Data;
-using System.Data.Entity;
-using System.Data.Entity.Infrastructure;
 using System.Data.OleDb;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Web.Http;
-using System.Web.Http.ModelBinding;
-using System.Web.Http.OData;
-using System.Web.Http.OData.Routing;
 using UISOL.Models;
 
 namespace UISOL.Controllers
 {
-    /*
-    The WebApiConfig class may require additional changes to add a route for this controller. Merge these statements into the Register method of the WebApiConfig class as applicable. Note that OData URLs are case sensitive.
-
-    using System.Web.Http.OData.Builder;
-    using System.Web.Http.OData.Extensions;
-    using UISOL.Models;
-    ODataConventionModelBuilder builder = new ODataConventionModelBuilder();
-    builder.EntitySet<Customer>("Customer");
-    builder.EntitySet<CustomerFile>("ClientFile"); 
-    config.Routes.MapODataServiceRoute("odata", "odata", builder.GetEdmModel());
-    */
-    public class CustomerController : ODataController
+    public class CustomerController : ApiController
     {
-        private UISContext db = new UISContext();
-
-        // GET: odata/Customer
-        [EnableQuery]
-        public IQueryable<Customer> GetCustomer()
+        // GET: api/Customer
+        public IEnumerable<Customer> Get()
         {
-            return db.Customer;
+            List<Customer> customers = new List<Customer>();
+
+            using (OleDbConnection connection = new OleDbConnection(ConfigurationManager.AppSettings["UISContext"]))
+            {
+                connection.Open();
+                OleDbDataReader reader = null;
+                OleDbCommand command = new OleDbCommand("SELECT [E-mail], [ID], [CONTACT NAME], [COMPANY NAME] from Customers", connection);
+                reader = command.ExecuteReader();
+                while (reader.Read())
+                {
+                    customers.Add(new Customer()
+                    {
+                        Email = reader[0].ToString(),
+                        Id = Int32.Parse(reader[1].ToString()),
+                        ContactName = reader[2].ToString(),
+                        CompanyName = reader[3].ToString()
+                    });
+                    //Console.WriteLine(reader[0].ToString() + "," + reader[1].ToString());
+                }
+            }
+
+            return customers;
         }
 
-        // GET: odata/Customer(5)
-        //[EnableQuery]
-        public IHttpActionResult GetCustomer([FromODataUri] string key)
+        // GET: api/Customer/5
+        public Customer Get(string id)
         {
-            string email = Encoding.ASCII.GetString(Convert.FromBase64String(key));
+            string email = Encoding.ASCII.GetString(Convert.FromBase64String(id));
             Customer customer = new Customer();
             using (OleDbConnection connection = new OleDbConnection(ConfigurationManager.AppSettings["UISContext"]))
             {
@@ -64,147 +64,22 @@ namespace UISOL.Controllers
                 }
             }
 
-            return Ok<Customer>(customer);
+            return customer;
         }
 
-        // PUT: odata/Customer(5)
-        public IHttpActionResult Put([FromODataUri] string key, Delta<Customer> patch)
+        // POST: api/Customer
+        public void Post([FromBody]string value)
         {
-            Validate(patch.GetEntity());
-
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            Customer customer = db.Customer.Find(key);
-            if (customer == null)
-            {
-                return NotFound();
-            }
-
-            patch.Put(customer);
-
-            try
-            {
-                db.SaveChanges();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!CustomerExists(key))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return Updated(customer);
         }
 
-        // POST: odata/Customer
-        public IHttpActionResult Post(Customer customer)
+        // PUT: api/Customer/5
+        public void Put(int id, [FromBody]string value)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            db.Customer.Add(customer);
-
-            try
-            {
-                db.SaveChanges();
-            }
-            catch (DbUpdateException)
-            {
-                if (CustomerExists(customer.Email))
-                {
-                    return Conflict();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return Created(customer);
         }
 
-        // PATCH: odata/Customer(5)
-        [AcceptVerbs("PATCH", "MERGE")]
-        public IHttpActionResult Patch([FromODataUri] string key, Delta<Customer> patch)
+        // DELETE: api/Customer/5
+        public void Delete(int id)
         {
-            Validate(patch.GetEntity());
-
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            Customer customer = db.Customer.Find(key);
-            if (customer == null)
-            {
-                return NotFound();
-            }
-
-            patch.Patch(customer);
-
-            try
-            {
-                db.SaveChanges();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!CustomerExists(key))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return Updated(customer);
-        }
-
-        // DELETE: odata/Customer(5)
-        public IHttpActionResult Delete([FromODataUri] string key)
-        {
-            Customer customer = db.Customer.Find(key);
-            if (customer == null)
-            {
-                return NotFound();
-            }
-
-            db.Customer.Remove(customer);
-            db.SaveChanges();
-
-            return StatusCode(HttpStatusCode.NoContent);
-        }
-
-        // GET: odata/Customer(5)/Reports
-        [EnableQuery]
-        public IQueryable<CustomerFile> GetReports([FromODataUri] string key)
-        {
-            return db.Customer.Where(m => m.Email == key).SelectMany(m => m.Reports);
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                db.Dispose();
-            }
-            base.Dispose(disposing);
-        }
-
-        private bool CustomerExists(string key)
-        {
-            return db.Customer.Count(e => e.Email == key) > 0;
         }
     }
 }

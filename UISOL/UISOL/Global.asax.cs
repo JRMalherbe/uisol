@@ -16,6 +16,8 @@ namespace UISOL
     {
         protected void Application_Start()
         {
+            GlobalConfiguration.Configure(WebApiConfig.Register);
+            /*
             RouteTable.Routes.Add(new ServiceRoute("ds.svc", new DataServiceHostFactory(), typeof(LabService)));
 
             var config = GlobalConfiguration.Configuration;
@@ -23,11 +25,10 @@ namespace UISOL
             config.EnsureInitialized();
 
             ODataConventionModelBuilder builder = new ODataConventionModelBuilder();
-            builder.EntitySet<Customer>("Client");
-            builder.EntitySet<CustomerFile>("ClientFile");
-            //config.Routes.MapODataRoute("api", "api", builder.GetEdmModel());
-            //config.Routes.MapODataServiceRoute("api", "api", builder.GetEdmModel());
-            config.Routes.MapODataServiceRoute("odata", "odata", builder.GetEdmModel());
+            builder.EntitySet<Customer>("Customer");
+            builder.EntitySet<CustomerFile>("CustomerFile");
+            config.Routes.MapODataServiceRoute("api", "api", builder.GetEdmModel());
+            */
         }
     }
 }
