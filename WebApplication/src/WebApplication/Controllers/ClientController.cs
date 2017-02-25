@@ -48,7 +48,7 @@ namespace UIS.Controllers
             //string something = Encoding.ASCII.GetString(toBytes);
             //WebUtility.UrlEncode();
             //WebUtility.UrlDecode();
-            string url = "http://localhost:50209/api/Customer/" + Convert.ToBase64String(Encoding.ASCII.GetBytes(userName));
+            string url = "http://localhost:50209/api/Customer/" + Convert.ToBase64String(Encoding.ASCII.GetBytes(userName)) + "/Reports";
             //string url = "http://localhost:50209/api/Customer('" + id + "')";
             HttpResponseMessage result = _client.GetAsync(url).Result;
             string body = "";
