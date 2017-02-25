@@ -6,7 +6,7 @@ using System.Web;
 
 namespace UISOL.Models
 {
-    public class ClientFile
+    public class CustomerFile
     {
         [Key, StringLength(255)]
         public string FileName { get; set; }

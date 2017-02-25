@@ -14,7 +14,5 @@ namespace UISOL.Models
         {
 
         }
-
-        public virtual DbSet<User> User { get; set; }
     }
 }

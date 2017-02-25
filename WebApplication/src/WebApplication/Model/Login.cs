@@ -12,5 +12,7 @@ namespace UIS
         public string Email { get; set; }
         [StringLength(80)]
         public string Password { get; set; }
+        [StringLength(10)] 
+        public string Role { get; set; }
     }
 }

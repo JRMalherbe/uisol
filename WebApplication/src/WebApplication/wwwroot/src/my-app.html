@@ -131,7 +131,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 console.log("Page Changed");
                 var oReq = new XMLHttpRequest();
                 oReq.addEventListener("load", reqListener);
-                oReq.open("GET", "/api/Person");
+                oReq.open("GET", "/api/Client/" + btoa(window.gebruiker));
                 var basic = "username1:password2"
                 basic = window.gebruiker + ":" + window.wagwoord
                 oReq.setRequestHeader("Authorization", "Basic " + btoa(basic));

@@ -8,31 +8,12 @@ namespace UIS
 {
     public class Client
     {
-        public int Id { get; set; }
+        [Key, StringLength(255)]
+        public string Email { get; set; }
         [StringLength(255)]
         public string ContactName { get; set; }
         [StringLength(255)]
         public string CompanyName { get; set; }
-        [StringLength(255)]
-        public string Email { get; set; }
+        public int ClientId { get; set; }
     }
 }
-
-/*
-namespace UISOL.Models
-{
-    public class Client
-    {
-        [Key, DatabaseGenerated(DatabaseGeneratedOption.None)]
-        public int Id { get; set; }
-        [StringLength(255)]
-        public string ContactName { get; set; }
-        [StringLength(255)]
-        public string CompanyName { get; set; }
-        [StringLength(255)]
-        public string Email { get; set; }
-
-        public ClientFile File { get; set; }
-    }
-}
-*/

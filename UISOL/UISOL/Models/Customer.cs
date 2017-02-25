@@ -7,17 +7,17 @@ using System.Web;
 
 namespace UISOL.Models
 {
-    public class Client
+    public class Customer
     {
-        [Key, DatabaseGenerated(DatabaseGeneratedOption.None)]
-        public int Id { get; set; }
+        [Key, StringLength(255)]
+        public string Email { get; set; }
         [StringLength(255)]
         public string ContactName { get; set; }
         [StringLength(255)]
         public string CompanyName { get; set; }
-        [StringLength(255)]
-        public string Email { get; set; }
+        //[Key, DatabaseGenerated(DatabaseGeneratedOption.None)]
+        public int Id { get; set; }
 
-        public ClientFile File { get; set; }
+        public virtual ICollection<CustomerFile> Reports { get; set; }
     }
 }

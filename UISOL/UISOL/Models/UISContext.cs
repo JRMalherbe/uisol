@@ -15,8 +15,8 @@ namespace UISOL.Models
 
         }
 
-        public virtual DbSet<User> User { get; set; }
-        public virtual DbSet<Client> Client { get; set; }
-        public virtual DbSet<ClientFile> ClientFile { get; set; }
+        public virtual DbSet<Customer> Customer { get; set; }
+        public virtual DbSet<CustomerFile> CustomerFile { get; set; }
+        public virtual DbSet<CustomerRequest> CustomerRequest { get; set; }
     }
 }

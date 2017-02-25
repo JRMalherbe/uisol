@@ -23,8 +23,8 @@ namespace UISOL
             config.EnsureInitialized();
 
             ODataConventionModelBuilder builder = new ODataConventionModelBuilder();
-            builder.EntitySet<Client>("Client");
-            builder.EntitySet<ClientFile>("ClientFile");
+            builder.EntitySet<Customer>("Client");
+            builder.EntitySet<CustomerFile>("ClientFile");
             //config.Routes.MapODataRoute("api", "api", builder.GetEdmModel());
             //config.Routes.MapODataServiceRoute("api", "api", builder.GetEdmModel());
             config.Routes.MapODataServiceRoute("odata", "odata", builder.GetEdmModel());

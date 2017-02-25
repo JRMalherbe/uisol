@@ -48,8 +48,12 @@ namespace UIS
 
             Login login = _db.Login.Find(username);
             if (pswhash == login.Password)
-            //if (username == "username1" && password == "password2")
+            {
+                context.Request.Headers.Add("UserName", username);
+                context.Request.Headers.Add("UserRole", string.IsNullOrEmpty(login.Role) ? "User" : login.Role);
+                //if (username == "username1" && password == "password2")
                 await _next.Invoke(context);
+            }
             else
                 context.Response.StatusCode = 403;
         }
