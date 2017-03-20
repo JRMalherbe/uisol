@@ -13,7 +13,8 @@
                     value: false,
                     notify: true
                 },
-                entiteitNaam: String
+                entiteitNaam: String,
+                itemsPad: String
             },
             maak: function (fun) {
                 this._aksie("post", null, fun)
@@ -35,8 +36,11 @@
                 var xhr = new XMLHttpRequest()
                 xhr.addEventListener("load", klaar)
                 var url = "/api/" + this.entiteitNaam
-                if (id)
+                if (id) {
                     url += "/" + id
+                    if (this.itemsPad)
+                        url += "/" + this.itemsPad
+                }
                 xhr.open(werkwoord, url)
 
                 var json = null

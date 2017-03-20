@@ -16,7 +16,7 @@ namespace UISOL.Models
         [StringLength(255)]
         public string CompanyName { get; set; }
         //[Key, DatabaseGenerated(DatabaseGeneratedOption.None)]
-        public int Id { get; set; }
+        public int ClientId { get; set; }
 
         public virtual ICollection<CustomerFile> Reports { get; set; }
     }

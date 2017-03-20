@@ -1,0 +1,49 @@
+﻿<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="shared-styles.html">
+<link rel="import" href="aksie-nuut.html" />
+<link rel="import" href="versoek-item.html">
+
+<dom-module id="versoek-lys">
+    <template>
+        <style include="shared-styles">
+            :host {
+                display: block;
+                padding: 5px;
+            }
+
+            .card {
+                margin: 10px;
+            }
+        </style>
+        <template is="dom-repeat" items="[[items]]">
+            <div class="card">
+                <versoek-item item="{{item}}" on-tap="klik"></versoek-item>
+            </div>
+        </template>
+        <aksie-nuut id="aksie" entiteit-naam="Client" items-pad="Request"></aksie-nuut>
+    </template>
+    <script>
+        Polymer({
+            is: 'versoek-lys',
+            properties: {
+                items: Array
+            },
+            ready: function () {
+                var self = this
+                email = btoa(window.aktiewegebruiker)
+                this.$.aksie.kry(email, function (xhr) {
+                    self.items = JSON.parse(xhr.response)
+                })
+            },
+            klik: function (e) {
+                var pad = "/versoek/" + e.target.item.id
+                console.log(pad)
+                //this.fire("requestChangeRoute", {
+                //    route: pad
+                //});
+                window.history.pushState({}, null, pad)
+                window.dispatchEvent(new CustomEvent('location-changed'))
+            }
+        });
+    </script>
+</dom-module>

@@ -1,0 +1,39 @@
+﻿<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="shared-styles.html">
+<link rel="import" href="../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../bower_components/iron-icons/maps-icons.html">
+<link rel="import" href="../bower_components/iron-icons/communication-icons.html">
+<link rel="import" href="../bower_components/iron-icons/hardware-icons.html">
+
+<dom-module id="versoek-item">
+    <!-- Defines the element's style and local DOM -->
+    <template>
+        <style include="shared-styles">
+            :host {
+                display: block;
+            }
+
+            .nb {
+                font-weight: bold;
+            }
+
+            #titel {
+                padding-top: 8px;
+                padding-bottom: 8px;
+            }
+        </style>
+        <div class="nb">
+            <span id="titel">{{item.LabNo}}</span>
+            <span>{{item.Coordinator}}</span>
+        </div>
+    </template>
+    <!-- Creates the element's prototype and registers it -->
+    <script>
+        Polymer({
+            is: 'versoek-item',
+            properties: {
+                item: Object
+            }
+        });
+    </script>
+</dom-module>

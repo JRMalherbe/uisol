@@ -49,7 +49,7 @@ namespace UISOL
                     clients.Add(new Customer()
                     {
                         Email = reader[0].ToString(),
-                        Id = Int32.Parse(reader[1].ToString()),
+                        ClientId = Int32.Parse(reader[1].ToString()),
                         ContactName = reader[2].ToString(),
                         CompanyName = reader[3].ToString()
                     });
@@ -77,7 +77,7 @@ namespace UISOL
                 {
                     customer = new Customer()
                     {
-                        Id = Int32.Parse(reader[0].ToString()),
+                        ClientId = Int32.Parse(reader[0].ToString()),
                         ContactName = reader[1].ToString(),
                         CompanyName = reader[2].ToString(),
                         Email = reader[3].ToString()
