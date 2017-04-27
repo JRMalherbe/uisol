@@ -166,7 +166,7 @@ namespace UISOL.Controllers
                                 request.Reports.Add(new CustomerFile()
                                 {
                                     FileName = file.Name,
-                                    LinkName = Guid.NewGuid().ToString()
+                                    LinkName = Convert.ToBase64String(Encoding.ASCII.GetBytes(Guid.NewGuid().ToString()))
                                     //LinkName = Convert.ToBase64String(Encoding.ASCII.GetBytes(file.Name))
                                 });
                             }

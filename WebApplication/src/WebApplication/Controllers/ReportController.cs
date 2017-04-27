@@ -26,7 +26,10 @@ namespace UIS.Controllers
         [HttpGet, Route("{email}/Request/{labno}/File/{name}", Name = "GetReportFile")]
         public async Task<FileContentResult> GetReportFile(string email, int labno, string name)
         {
-            string fileName = Encoding.ASCII.GetString(Convert.FromBase64String(name));
+            //string linkName = Encoding.ASCII.GetString(Convert.FromBase64String(name));
+
+            CustomerFile customerFile = _db.CustomerFile.Where(x => x.CustomerRequestLabNo == labno && x.LinkName == name).SingleOrDefault();
+            string fileName = customerFile.FileName;
             string filePath = @"C:\p\reports\" + fileName;
 
             byte[] byteResult;
