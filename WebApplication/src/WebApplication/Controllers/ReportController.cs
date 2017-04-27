@@ -29,7 +29,9 @@ namespace UIS.Controllers
             //string linkName = Encoding.ASCII.GetString(Convert.FromBase64String(name));
 
             CustomerFile customerFile = _db.CustomerFile.Where(x => x.CustomerRequestLabNo == labno && x.LinkName == name).SingleOrDefault();
-            string fileName = customerFile.FileName;
+            string fileName = "Not Found.pdf";
+            if (customerFile != null)
+                fileName = customerFile.FileName;
             string filePath = @"C:\p\reports\" + fileName;
 
             byte[] byteResult;
