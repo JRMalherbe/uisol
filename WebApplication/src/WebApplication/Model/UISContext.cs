@@ -10,7 +10,10 @@ namespace UIS
     {
         public UISContext(DbContextOptions<UISContext> options) : base(options)
         { }
-
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+        }
         public DbSet<Login> Login { get; set; }
         public DbSet<Client> Client { get; set; }
         public DbSet<CustomerRequest> CustomerRequest { get; set; }

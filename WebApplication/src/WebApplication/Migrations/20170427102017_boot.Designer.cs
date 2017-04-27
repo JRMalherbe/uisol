@@ -8,8 +8,8 @@ using UIS;
 namespace UIS.Migrations
 {
     [DbContext(typeof(UISContext))]
-    [Migration("20170225110340_Login Role")]
-    partial class LoginRole
+    [Migration("20170427102017_boot")]
+    partial class boot
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -36,6 +36,33 @@ namespace UIS.Migrations
                     b.ToTable("Client");
                 });
 
+            modelBuilder.Entity("UIS.CustomerFile", b =>
+                {
+                    b.Property<string>("FileName")
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(255);
+
+                    b.Property<int?>("CustomerRequestLabNo");
+
+                    b.Property<string>("LinkName")
+                        .HasMaxLength(255);
+
+                    b.HasKey("FileName");
+
+                    b.HasIndex("CustomerRequestLabNo");
+
+                    b.ToTable("CustomerFile");
+                });
+
+            modelBuilder.Entity("UIS.CustomerRequest", b =>
+                {
+                    b.Property<int>("LabNo");
+
+                    b.HasKey("LabNo");
+
+                    b.ToTable("CustomerRequest");
+                });
+
             modelBuilder.Entity("UIS.Login", b =>
                 {
                     b.Property<string>("Email")
@@ -51,6 +78,13 @@ namespace UIS.Migrations
                     b.HasKey("Email");
 
                     b.ToTable("Login");
+                });
+
+            modelBuilder.Entity("UIS.CustomerFile", b =>
+                {
+                    b.HasOne("UIS.CustomerRequest")
+                        .WithMany("Reports")
+                        .HasForeignKey("CustomerRequestLabNo");
                 });
         }
     }

@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Text;
 using System.IO;
 using Microsoft.Net.Http.Headers;
+using System.Net.Http;
 
 // For more information on enabling Web API for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -14,6 +15,14 @@ namespace UIS.Controllers
     [Route("api/[controller]")]
     public class ReportController : Controller
     {
+        private static HttpClient _client = new HttpClient();
+        private readonly UISContext _db;
+
+        public ReportController(UISContext db)
+        {
+            _db = db;
+        }
+
         [HttpGet, Route("{email}/Request/{labno}/File/{name}", Name = "GetReportFile")]
         public async Task<FileContentResult> GetReportFile(string email, int labno, string name)
         {

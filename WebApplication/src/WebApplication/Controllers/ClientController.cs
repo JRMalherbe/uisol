@@ -8,6 +8,8 @@ using System.Text;
 using System.Net;
 using Microsoft.Net.Http.Headers;
 using System.IO;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 // For more information on enabling Web API for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -17,6 +19,13 @@ namespace UIS.Controllers
     public class ClientController : Controller
     {
         private static HttpClient _client = new HttpClient();
+        private readonly UISContext _db;
+
+        public ClientController(UISContext db)
+        {
+            _db = db;
+        }
+        
         // GET: api/values
         [HttpGet]
         public string Get()
@@ -104,11 +113,39 @@ namespace UIS.Controllers
             if (result.IsSuccessStatusCode)
             {
                 body = result.Content.ReadAsStringAsync().Result;
+
+                CustomerRequest req = _db.CustomerRequest.Find(labno);
+                if (req != null)
+                {
+                    List<CustomerFile> files = _db.CustomerFile.Where(x => x.CustomerRequestLabNo == labno).ToList();
+                    _db.CustomerFile.RemoveRange(files);
+                    _db.SaveChanges();
+
+                    _db.CustomerRequest.Remove(req);
+                    _db.SaveChanges();
+                }
+
+                CustomerRequest nreq = JsonConvert.DeserializeObject<CustomerRequest>(body);
+                _db.CustomerRequest.Add(nreq);
+                _db.SaveChanges();
+
                 Response.Headers.Add("Content-Type", "application/json");
                 return body;
             }
             NotFound();
             return null;
+        }
+
+        private static IEnumerable<JToken> AllChildren(JToken json)
+        {
+            foreach (var c in json.Children())
+            {
+                yield return c;
+                foreach (var cc in AllChildren(c))
+                {
+                    yield return cc;
+                }
+            }
         }
 
         /*
