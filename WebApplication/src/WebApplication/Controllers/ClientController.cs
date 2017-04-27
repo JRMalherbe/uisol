@@ -96,7 +96,6 @@ namespace UIS.Controllers
             string url = "";
             string body = "";
             HttpResponseMessage result = null;
-
             url = "http://localhost:50209/api/Customer/" + Convert.ToBase64String(Encoding.ASCII.GetBytes(userName)) + "/Reports/" + labno.ToString();
             if (userRole == "Admin")
                 url = "http://localhost:50209/api/Customer/" + email + "/Reports/" + labno.ToString();
@@ -112,20 +111,110 @@ namespace UIS.Controllers
             return null;
         }
 
-        [HttpGet("{email}/Request/{labno}/File/{name}")]
-        public async Task<IActionResult> GetFile(string email, int labno, string name)
+        /*
+        [HttpGet, Route("{email}/Request/{labno}/File/{name}", Name = "GetFile")]
+        public FileStreamResult GetFile(string email, int labno, string name)
         {
-            string filename = @"C:\p\reports\" + Encoding.ASCII.GetString(Convert.FromBase64String(name));
-            byte[] result;
+            string fileName = Encoding.ASCII.GetString(Convert.FromBase64String(name));
+            string filePath = @"C:\p\reports\" + fileName;
+            var stream = new FileStream(filePath, FileMode.Open);
+            string contentType = "application/pdf";
+            //HttpContext.Response.ContentType = contentType;
+            //HttpContext.Response.Headers.Add("Content-Disposition", new[] { "attachment; filename=" + fileName });
+            var contentDisposition = new ContentDispositionHeaderValue("attachment");
+            contentDisposition.SetHttpFileName(fileName);
+            Response.Headers[HeaderNames.ContentDisposition] = contentDisposition.ToString();
 
-            FileStream SourceStream = System.IO.File.Open(filename, FileMode.Open);
-            result = new byte[SourceStream.Length];
-            await SourceStream.ReadAsync(result, 0, (int)SourceStream.Length);
-
-            //var stream = await { { __get_stream_here__} }
-            var response = File(SourceStream, "application/octet-stream"); // FileStreamResult
-            return response;
+            return new FileStreamResult(stream, contentType);
         }
+
+        [HttpGet, Route("{email}/Request/{labno}/File/{name}", Name = "GetFile5")]
+        public IActionResult GetFile5(string email, int labno, string name)
+        {
+            //string userName = HttpContext.Request.Headers["UserName"].ToString();
+            //string userRole = HttpContext.Request.Headers["UserRole"].ToString();
+
+            //string url = "";
+            //HttpResponseMessage result = null;
+            //url = "http://localhost:50209/api/Customer/" + Convert.ToBase64String(Encoding.ASCII.GetBytes(userName)) + "/Reports/" + labno.ToString();
+            //if (userRole == "Admin")
+            //    url = "http://localhost:50209/api/Customer/" + email + "/Reports/" + labno.ToString();
+            //authresult = _client.GetAsync(url).Result;
+            //if (!authresult.IsSuccessStatusCode)
+            //    return NotFound();
+
+            string fileName = Encoding.ASCII.GetString(Convert.FromBase64String(name));
+            string filePath = @"C:\p\reports\" + fileName;
+            string contentType = "application/pdf";
+            HttpContext.Response.ContentType = contentType;
+            var result = new FileContentResult(System.IO.File.ReadAllBytes(filePath), contentType)
+            {
+                FileDownloadName = fileName
+            };
+
+            return result;
+        }
+
+        //[HttpGet("{email}/Request/{labno}/File/{name}")]
+        [HttpGet, Route("{email}/Request/{labno}/File2/{name}", Name = "GetFile2")]
+        public FileResult GetFile2(string email, int labno, string name)
+        {
+            string fileName = Encoding.ASCII.GetString(Convert.FromBase64String(name));
+            string filePath = @"C:\p\reports\" + fileName;
+
+            byte[] fileBytes = System.IO.File.ReadAllBytes(filePath);
+            //Response.Headers.Add("Content-Disposition", new[] { "attachment; filename=" + fileName });
+            return File(fileBytes, "application/pdf", fileName);
+        }
+
+        [HttpGet, Route("{email}/Request/{labno}/File3/{name}", Name = "GetFile3")]
+        //[HttpGet("{email}/Request/{labno}/File/{name}")]
+        public async Task<IActionResult> GetFile3(string email, int labno, string name)
+        {
+            string fileName = Encoding.ASCII.GetString(Convert.FromBase64String(name));
+            string filePath = @"C:\p\reports\" + fileName;
+
+            var data = await KryLeerData(filePath);
+            using (var leerStroom = new FileStream(filePath, FileMode.Create))
+            {
+                await leerStroom.WriteAsync(data, 0, data.Length);
+            }
+
+            if (data == null)
+                return NotFound();
+
+            //Response.Headers.Add("Content-Type", "application/octet-stream");
+            Response.Headers.Add("Content-Disposition", new[] { "attachment; filename=" + fileName });
+            return File(data, "application/octet-stream");
+        }
+
+        [HttpGet, Route("{email}/Request/{labno}/File4/{name}", Name = "GetFile4")]
+        //[HttpGet("{email}/Request/{labno}/File/{name}")]
+        public async Task<FileContentResult> GetFile4(string email, int labno, string name)
+        {
+            string fileName = Encoding.ASCII.GetString(Convert.FromBase64String(name));
+            string filePath = @"C:\p\reports\" + fileName;
+
+            byte[] byteResult;
+            FileStream SourceStream = System.IO.File.Open(fileName, FileMode.Open, FileAccess.Read);
+            byteResult = new byte[SourceStream.Length];
+            await SourceStream.ReadAsync(byteResult, 0, (int)SourceStream.Length);
+            return File(byteResult, "application/octet-stream", fileName ); // FileStreamResult
+        }
+
+        private async Task<byte[]> KryLeerData(string pad)
+        {
+            if (!System.IO.File.Exists(pad))
+                return null;
+
+            using (var leerStroom = new FileStream(pad, FileMode.Open))
+            {
+                var data = new byte[leerStroom.Length];
+                var gelees = await leerStroom.ReadAsync(data, 0, (int)leerStroom.Length);
+                return data;
+            }
+        }
+        */
 
         // POST api/values
         [HttpPost]

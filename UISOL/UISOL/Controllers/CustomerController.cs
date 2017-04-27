@@ -163,7 +163,11 @@ namespace UISOL.Controllers
                             FileInfo[] files = folder.GetFiles(request.LabNo.ToString() + "*.pdf");
                             foreach (FileInfo file in files)
                             {
-                                request.Reports.Add(new CustomerFile() { FileName = file.Name });
+                                request.Reports.Add(new CustomerFile()
+                                {
+                                    FileName = file.Name,
+                                    LinkName = Convert.ToBase64String(Encoding.ASCII.GetBytes(file.Name))
+                                });
                             }
                         }
                     }

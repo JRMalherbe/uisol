@@ -60,7 +60,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 window.wagwoord = this.item.Password;
                 this.item.Password = "";
                 var self = this
-                this.$.nuut.kry(this.item.Email, function (xhr) {
+                this.$.nuut.kry(this.item.Email, null, null, function (xhr) {
                     if (xhr.status >= 200 && xhr.status < 300) {
                         window.history.pushState({}, null, '/reports');
                         window.dispatchEvent(new CustomEvent('location-changed'));

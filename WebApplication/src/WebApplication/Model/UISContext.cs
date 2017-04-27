@@ -13,5 +13,7 @@ namespace UIS
 
         public DbSet<Login> Login { get; set; }
         public DbSet<Client> Client { get; set; }
+        public DbSet<CustomerRequest> CustomerRequest { get; set; }
+        public DbSet<CustomerFile> CustomerFile { get; set; }
     }
 }

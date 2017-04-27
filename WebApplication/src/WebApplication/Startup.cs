@@ -58,7 +58,8 @@ namespace UIS
                 await next();
             });
             app.UseMvc();
-            db.Database.Migrate();
+            //db.Database.EnsureCreated();
+            //db.Database.Migrate();
         }
     }
 }

@@ -26,6 +26,12 @@ namespace UIS
                 return;
             }
 
+            if (context.Request.Path.ToString().StartsWith("/api/Report/"))
+            {
+                await _next.Invoke(context);
+                return;
+            }
+
             string authHeader = context.Request.Headers["Authorization"];
             if (authHeader == null || !authHeader.StartsWith("Basic"))
             {

@@ -15,7 +15,7 @@
                 margin: 10px;
             }
         </style>
-        <template is="dom-repeat" items="[[items]]">
+        <template is="dom-repeat" items="[[items]]" id="requestList">
             <div class="card">
                 <versoek-item item="{{item}}" on-tap="klik"></versoek-item>
             </div>
@@ -28,22 +28,52 @@
             properties: {
                 items: Array
             },
-            ready: function () {
+
+            lees: function () {
                 var self = this
-                email = btoa(window.aktiewegebruiker)
-                this.$.aksie.kry(email, function (xhr) {
+                var email = btoa(window.aktiewegebruiker)
+                this.$.aksie.kry(email, null, null, function (xhr) {
                     self.items = JSON.parse(xhr.response)
                 })
             },
+
             klik: function (e) {
-                var pad = "/versoek/" + e.target.item.id
+                var self = this
+                var email = btoa(window.aktiewegebruiker)
+                /*
+                var index = this.items.indexOf(e.target.item);
+                var pad = "items." + index + ".Reports"
                 console.log(pad)
-                //this.fire("requestChangeRoute", {
-                //    route: pad
-                //});
-                window.history.pushState({}, null, pad)
-                window.dispatchEvent(new CustomEvent('location-changed'))
+                this.$.detailAksie.kry(email, e.target.item.LabNo, null, function (xhr) {
+                    var temp = JSON.parse(xhr.response)
+                    self.items[index].Reports = temp.Reports
+                    console.log(self.items[index], e.target)
+                    //e.target.refresh();
+                    //self.notifyPath(pad, 'changed');
+                })
+                */
+            },
+
+            created: function () {
+                console.log(this.localName + '#' + this.id + ' was created');
+            },
+
+            ready: function () {
+                console.log(this.localName + '#' + this.id + ' has local DOM initialized');
+            },
+
+            attached: function () {
+                this.lees()
+            },
+
+            detached: function () {
+                console.log(this.localName + '#' + this.id + ' was detached');
+            },
+
+            attributeChanged: function (name, type) {
+                console.log(this.localName + '#' + this.id + '.' + name + '.' + type + ' was changed');
             }
+
         });
     </script>
 </dom-module>

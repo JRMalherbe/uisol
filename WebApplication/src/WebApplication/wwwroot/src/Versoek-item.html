@@ -4,6 +4,7 @@
 <link rel="import" href="../bower_components/iron-icons/maps-icons.html">
 <link rel="import" href="../bower_components/iron-icons/communication-icons.html">
 <link rel="import" href="../bower_components/iron-icons/hardware-icons.html">
+<link rel="import" href="aksie-nuut.html" />
 
 <dom-module id="versoek-item">
     <!-- Defines the element's style and local DOM -->
@@ -22,17 +23,53 @@
                 padding-bottom: 8px;
             }
         </style>
-        <div class="nb">
+        <div class="nb" on-tap="klik">
             <span id="titel">{{item.LabNo}}</span>
             <span>{{item.Coordinator}}</span>
         </div>
+        <div>
+            <template is="dom-repeat" items="[[reports]]" as="report">
+                <span><a href="/api/Report/{{email}}/Request/{{item.LabNo}}/File/{{report.LinkName}}" target="_blank">{{report.FileName}}</a></span>
+            </template>
+        </div>
+        <aksie-nuut id="detailAksie" entiteit-naam="Client" items-pad="Request" item-tipe="File"></aksie-nuut>
+        <aksie-nuut id="detailReport" entiteit-naam="Report" items-pad="Request" item-tipe="File"></aksie-nuut>
     </template>
     <!-- Creates the element's prototype and registers it -->
     <script>
         Polymer({
             is: 'versoek-item',
             properties: {
-                item: Object
+                item: Object,
+                email: "", 
+                reports: {
+                    type: Array,
+                    notify: true,
+                    value: function () { return []; }
+                },
+            },
+            klik: function (e) {
+                var self = this
+                var pad = "Client/" + this.email + "/Request/" + this.item.LabNo
+                //console.log(pad)
+                this.$.detailAksie.kry(this.email, this.item.LabNo, null, function (xhr) {
+                    var temp = JSON.parse(xhr.response)
+                    self.reports = temp.Reports
+                })
+            },
+            klikanker: function (e) {
+                var self = this
+                var filename = btoa(e.target.tag)
+                var pad = "Report/" + this.email + "/Request/" + this.item.LabNo + "/File/" + filename
+                console.log(pad)
+                this.$.detailReport.kry(this.email, this.item.LabNo, filename, function (xhr) {
+                })
+            },
+            ready: function () {
+                this.email = btoa(window.aktiewegebruiker)
+            },
+            attributeChanged: function (name, type) {
+                console.log(this.localName + '#' + this.id + '.' + name + '.' + type + ' was changed');
             }
         });
     </script>

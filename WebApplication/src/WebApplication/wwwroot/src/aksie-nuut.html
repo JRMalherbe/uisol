@@ -14,32 +14,39 @@
                     notify: true
                 },
                 entiteitNaam: String,
-                itemsPad: String
-            },
+                itemsPad: String,
+                itemTipe: String
+        },
             maak: function (fun) {
-                this._aksie("post", null, fun)
+                this._aksie("post", null, null, null, fun)
             },
-            kry: function (id, fun) {
-                this._aksie("get", id, fun)
+            kry: function (id, itemId, itemNaam, fun) {
+                this._aksie("get", id, itemId, itemNaam, fun)
             },
-            vervang: function(id, fun) {
-                this._aksie("put", id, fun)
+            vervang: function (id, fun) {
+                this._aksie("put", id, null, null, fun)
             },
-            verander: function(id, fun) {
-                this._aksie("patch", id, fun)
+            verander: function (id, fun) {
+                this._aksie("patch", id, null, null, fun)
             },
             veeuit: function(id, fun) {
-                this._aksie("delete", id, fun)
+                this._aksie("delete", id, null, null, fun)
             },
-            _aksie: function (werkwoord, id, fun) {
+            _aksie: function (werkwoord, id, itemId, itemNaam, fun) {
                 this.verhoedInvoer = true
                 var xhr = new XMLHttpRequest()
                 xhr.addEventListener("load", klaar)
                 var url = "/api/" + this.entiteitNaam
                 if (id) {
                     url += "/" + id
-                    if (this.itemsPad)
+                    if (this.itemsPad) {
                         url += "/" + this.itemsPad
+                        if (itemId) {
+                            url += "/" + itemId;
+                            if (this.itemTipe && itemNaam)
+                                url += "/" + this.itemTipe + "/" + itemNaam;
+                        }
+                    }
                 }
                 xhr.open(werkwoord, url)
 
