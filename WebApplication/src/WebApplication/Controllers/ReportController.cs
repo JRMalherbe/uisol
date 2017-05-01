@@ -7,6 +7,7 @@ using System.Text;
 using System.IO;
 using Microsoft.Net.Http.Headers;
 using System.Net.Http;
+using Microsoft.Extensions.Options;
 
 // For more information on enabling Web API for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -17,10 +18,12 @@ namespace UIS.Controllers
     {
         private static HttpClient _client = new HttpClient();
         private readonly UISContext _db;
+        private readonly UISConfig _config;
 
-        public ReportController(UISContext db)
+        public ReportController(UISContext db, IOptions<UISConfig> config)
         {
             _db = db;
+            _config = config.Value;
         }
 
         [HttpGet, Route("{email}/Request/{labno}/File/{name}", Name = "GetReportFile")]
@@ -32,7 +35,7 @@ namespace UIS.Controllers
             string fileName = "Not Found.pdf";
             if (customerFile != null)
                 fileName = customerFile.FileName;
-            string filePath = @"C:\p\reports\" + fileName;
+            string filePath = _config.ReportPath + fileName;
 
             byte[] byteResult;
             FileStream SourceStream = System.IO.File.Open(filePath, FileMode.Open, FileAccess.Read);

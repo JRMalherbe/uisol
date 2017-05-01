@@ -156,8 +156,8 @@ namespace UISOL.Controllers
                             CustomerId = customer.ClientId,
                             Reports = new List<CustomerFile>()
                         };
-
-                        DirectoryInfo folder = new DirectoryInfo(@"C:\p\reports");
+                        string reportPath = ConfigurationManager.AppSettings["ReportPath"];
+                        DirectoryInfo folder = new DirectoryInfo(reportPath);
                         if (folder.Exists) // else: Invalid folder!
                         {
                             FileInfo[] files = folder.GetFiles(request.LabNo.ToString() + "*.pdf");

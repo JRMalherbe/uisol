@@ -10,6 +10,7 @@ using Microsoft.Net.Http.Headers;
 using System.IO;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using Microsoft.Extensions.Options;
 
 // For more information on enabling Web API for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -20,10 +21,12 @@ namespace UIS.Controllers
     {
         private static HttpClient _client = new HttpClient();
         private readonly UISContext _db;
+        private readonly UISConfig _config;
 
-        public ClientController(UISContext db)
+        public ClientController(UISContext db, IOptions<UISConfig> config)
         {
             _db = db;
+            _config = config.Value;
         }
         
         // GET: api/values
@@ -32,9 +35,10 @@ namespace UIS.Controllers
         {
             string userName = HttpContext.Request.Headers["UserName"].ToString();
             string userRole = HttpContext.Request.Headers["UserRole"].ToString();
-            string url = "http://localhost:50209/api/Customer/" + Convert.ToBase64String(Encoding.ASCII.GetBytes(userName));
+            
+            string url = _config.ServiceRoot + "api/Customer/" + Convert.ToBase64String(Encoding.ASCII.GetBytes(userName));
             if (userRole == "Admin")
-                url = "http://localhost:50209/api/Customer";
+                url = _config.ServiceRoot + "api/Customer";
             HttpResponseMessage result = _client.GetAsync(url).Result;
             string body = "";
             if (result.IsSuccessStatusCode)
@@ -60,9 +64,9 @@ namespace UIS.Controllers
             //string something = Encoding.ASCII.GetString(toBytes);
             //WebUtility.UrlEncode();
             //WebUtility.UrlDecode();
-            string url = "http://localhost:50209/api/Customer('" + Convert.ToBase64String(Encoding.ASCII.GetBytes(userName)) + "')";
+            string url = _config.ServiceRoot + "api/Customer('" + Convert.ToBase64String(Encoding.ASCII.GetBytes(userName)) + "')";
             if (userRole == "Admin")
-                url = "http://localhost:50209/api/Customer('" + email + "')";
+                url = _config.ServiceRoot + "api/Customer('" + email + "')";
             HttpResponseMessage result = _client.GetAsync(url).Result;
             string body = "";
             if (result.IsSuccessStatusCode)
@@ -81,9 +85,9 @@ namespace UIS.Controllers
         {
             string userName = HttpContext.Request.Headers["UserName"].ToString();
             string userRole = HttpContext.Request.Headers["UserRole"].ToString();
-            string url = "http://localhost:50209/api/Customer/" + Convert.ToBase64String(Encoding.ASCII.GetBytes(userName)) + "/Reports";
+            string url = _config.ServiceRoot + "api/Customer/" + Convert.ToBase64String(Encoding.ASCII.GetBytes(userName)) + "/Reports";
             if (userRole == "Admin")
-                url = "http://localhost:50209/api/Customer/" + email + "/Reports";
+                url = _config.ServiceRoot + "api/Customer/" + email + "/Reports";
             HttpResponseMessage result = _client.GetAsync(url).Result;
             string body = "";
             if (result.IsSuccessStatusCode)
@@ -105,9 +109,9 @@ namespace UIS.Controllers
             string url = "";
             string body = "";
             HttpResponseMessage result = null;
-            url = "http://localhost:50209/api/Customer/" + Convert.ToBase64String(Encoding.ASCII.GetBytes(userName)) + "/Reports/" + labno.ToString();
+            url = _config.ServiceRoot + "api/Customer/" + Convert.ToBase64String(Encoding.ASCII.GetBytes(userName)) + "/Reports/" + labno.ToString();
             if (userRole == "Admin")
-                url = "http://localhost:50209/api/Customer/" + email + "/Reports/" + labno.ToString();
+                url = _config.ServiceRoot + "api/Customer/" + email + "/Reports/" + labno.ToString();
             result = _client.GetAsync(url).Result;
             body = "";
             if (result.IsSuccessStatusCode)

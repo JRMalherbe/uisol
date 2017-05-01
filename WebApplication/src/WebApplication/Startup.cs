@@ -34,6 +34,8 @@ namespace UIS
             string connectionString = ConfigurationExtensions.GetConnectionString(this.Configuration, "DefaultConnection");
             services.AddMvc();
             services.AddDbContext<UISContext>(options => options.UseSqlServer(connectionString));
+            services.AddOptions();
+            services.Configure<UISConfig>(this.Configuration);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
