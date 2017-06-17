@@ -91,6 +91,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                     <my-home name="home"></my-home>
                     <my-reports name="reports"></my-reports>
                     <my-profile name="profile"></my-profile>
+                    <my-register name="register"></my-register>
                     <my-view404 name="view404"></my-view404>
                 </iron-pages>
             </app-header-layout>
@@ -128,7 +129,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 var resolvedPageUrl = this.resolveUrl('my-' + page + '.html');
                 this.importHref(resolvedPageUrl, null, this._showPage404, true);
 
-                console.log("Page Changed");
+                console.log("Page Changed", resolvedPageUrl);
+                /*
                 var oReq = new XMLHttpRequest();
                 oReq.addEventListener("load", reqListener);
                 oReq.open("GET", "/api/Client/" + btoa(window.gebruiker));
@@ -136,6 +138,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 basic = window.gebruiker + ":" + window.wagwoord
                 oReq.setRequestHeader("Authorization", "Basic " + btoa(basic));
                 oReq.send();
+                */
             },
 
             _showPage404: function () {

@@ -33,15 +33,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             <p>Please register to make use of our client portal</p>
             <paper-input label="Email" value="{{item.Email}}"></paper-input>
             <paper-input label="Password" value="{{item.Password}}"></paper-input>
-            <paper-input label="Confirm Password" value="{{item.ConfirmPassword}}"></paper-input>
-            <paper-button raised on-tap="hanteerKlik">Login</paper-button>
+            <paper-button raised on-tap="hanteerKlik">Register</paper-button>
             <aksie-fout id="fout" foute="{{foute}}"></aksie-fout>
-            <aksie-nuut id="nuut" item="{{item}}" entiteit-naam="Login"></aksie-nuut>
+            <aksie-nuut id="nuut" item="{{item}}" entiteit-naam="Register"></aksie-nuut>
         </div>
     </template>
     <script>
         Polymer({
-            is: 'my-login',
+            is: 'my-register',
             properties: {
                 verhoedInvoer: {
                     type: Boolean,
@@ -55,13 +54,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 foute: Object
             },
             hanteerKlik: function () {
-                console.log('login', this.item)
-                window.gebruiker = this.item.Email;
-                window.aktiewegebruiker = this.item.Email;
-                window.wagwoord = this.item.Password;
-                this.item.Password = "";
+                console.log('register', this.item)
+                //window.gebruiker = this.item.Email;
+                //window.aktiewegebruiker = this.item.Email;
+                //window.wagwoord = this.item.Password;
+                //this.item.Password = "";
                 var self = this
-                this.$.nuut.kry(this.item.Email, null, null, function (xhr) {
+                //this.$.nuut.kry(this.item.Email, null, null, function (xhr) {
+                this.$.nuut.maak(function (xhr) {
                     if (xhr.status >= 200 && xhr.status < 300) {
                         window.history.pushState({}, null, '/reports');
                         window.dispatchEvent(new CustomEvent('location-changed'));

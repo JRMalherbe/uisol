@@ -32,6 +32,12 @@ namespace UIS
                 return;
             }
 
+            if (context.Request.Path.ToString().StartsWith("/api/Register"))
+            {
+                await _next.Invoke(context);
+                return;
+            }
+
             string authHeader = context.Request.Headers["Authorization"];
             if (authHeader == null || !authHeader.StartsWith("Basic"))
             {
@@ -53,15 +59,20 @@ namespace UIS
             var pswhash = BitConverter.ToString(hash).Replace("-", "");
 
             Login login = _db.Login.Find(username);
-            if (pswhash == login.Password)
-            {
-                context.Request.Headers.Add("UserName", username);
-                context.Request.Headers.Add("UserRole", string.IsNullOrEmpty(login.Role) ? "User" : login.Role);
-                //if (username == "username1" && password == "password2")
-                await _next.Invoke(context);
-            }
-            else
+            if (login == null)
                 context.Response.StatusCode = 403;
+            else
+            {
+                if (pswhash == login.Password)
+                {
+                    context.Request.Headers.Add("UserName", username);
+                    context.Request.Headers.Add("UserRole", string.IsNullOrEmpty(login.Role) ? "User" : login.Role);
+                    //if (username == "username1" && password == "password2")
+                    await _next.Invoke(context);
+                }
+                else
+                    context.Response.StatusCode = 403;
+            }
         }
     }
 }

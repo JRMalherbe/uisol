@@ -54,13 +54,14 @@
                 if ("get" == werkwoord)
                     xhr.setRequestHeader("Accept", "application/json")
                 else if ("post" == werkwoord || "put" == werkwoord || "patch" == werkwoord) {
-                    json = JSON.stringify(this.item) 
+                    json = JSON.stringify(this.item)
                     xhr.setRequestHeader("Content-Type", "application/json")
                 }
 
                 var basic = "username1:password2"
                 basic = window.gebruiker + ":" + window.wagwoord
                 xhr.setRequestHeader("Authorization", "Basic " + btoa(basic));
+                console.log(werkwoord, url, this.item);
                 xhr.send(json)
 
                 var self = this
