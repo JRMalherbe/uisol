@@ -1,0 +1,75 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="shared-styles.html">
+<link rel="import" href="../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../bower_components/paper-input/paper-textarea.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="aksie-nuut.html">
+<link rel="import" href="aksie-fout.html">
+<dom-module id="my-register">
+    <template>
+        <style include="shared-styles">
+            :host {
+                display: block;
+                padding: 16px;
+            }
+
+            paper-button {
+                color: #0000FF;
+                --paper-button-ink-color: #FF0000;
+            }
+        </style>
+
+        <div class="card">
+            <h2>Register</h2>
+            <p>Please register to make use of our client portal</p>
+            <paper-input label="Email" value="{{item.Email}}"></paper-input>
+            <paper-input label="Password" value="{{item.Password}}"></paper-input>
+            <paper-input label="Confirm Password" value="{{item.ConfirmPassword}}"></paper-input>
+            <paper-button raised on-tap="hanteerKlik">Login</paper-button>
+            <aksie-fout id="fout" foute="{{foute}}"></aksie-fout>
+            <aksie-nuut id="nuut" item="{{item}}" entiteit-naam="Login"></aksie-nuut>
+        </div>
+    </template>
+    <script>
+        Polymer({
+            is: 'my-login',
+            properties: {
+                verhoedInvoer: {
+                    type: Boolean,
+                    value: false
+                },
+                item: {
+                    type: Object,
+                    value: {}
+                },
+                xhr: Object,
+                foute: Object
+            },
+            hanteerKlik: function () {
+                console.log('login', this.item)
+                window.gebruiker = this.item.Email;
+                window.aktiewegebruiker = this.item.Email;
+                window.wagwoord = this.item.Password;
+                this.item.Password = "";
+                var self = this
+                this.$.nuut.kry(this.item.Email, null, null, function (xhr) {
+                    if (xhr.status >= 200 && xhr.status < 300) {
+                        window.history.pushState({}, null, '/reports');
+                        window.dispatchEvent(new CustomEvent('location-changed'));
+                        return
+                    }
+                    self.$.fout.xhr(xhr)
+                })
+            },
+        });
+    </script>
+</dom-module>
