@@ -23,6 +23,9 @@ namespace UISWeb.Data
         }
 
         public DbSet<Client> Client { get; set; }
+        public DbSet<Customer> Customer { get; set; }
+        public DbSet<CustomerRequest> CustomerRequest { get; set; }
+        public DbSet<CustomerFile> CustomerFile { get; set; }
 
     }
 }

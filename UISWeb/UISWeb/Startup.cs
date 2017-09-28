@@ -33,9 +33,12 @@ namespace UISWeb
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
 
+            //string uiscontext = Configuration.GetConnectionString("UISDataConnection");
             services.AddDbContext<UISWebContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("UISDataConnection")));
 
+            services.Configure<UISConfig>(this.Configuration);
+            
             // Add application services.
             services.AddTransient<IEmailSender, EmailSender>();
 
@@ -66,6 +69,13 @@ namespace UISWeb
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
+
+            var serviceScopeFactory = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>();
+            using (var serviceScope = serviceScopeFactory.CreateScope())
+            {
+                var dbContext = serviceScope.ServiceProvider.GetService<UISWebContext>();
+                dbContext.Database.EnsureCreated();
+            }
         }
     }
 }

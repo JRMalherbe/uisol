@@ -38,6 +38,83 @@ namespace UISWeb.Migrations
 
                     b.ToTable("Client");
                 });
+
+            modelBuilder.Entity("UISWeb.Models.Customer", b =>
+                {
+                    b.Property<string>("Email")
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(255);
+
+                    b.Property<int>("ClientId");
+
+                    b.Property<string>("CompanyName")
+                        .HasMaxLength(255);
+
+                    b.Property<string>("ContactName")
+                        .HasMaxLength(255);
+
+                    b.HasKey("Email");
+
+                    b.ToTable("Customer");
+                });
+
+            modelBuilder.Entity("UISWeb.Models.CustomerFile", b =>
+                {
+                    b.Property<string>("FileName")
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(255);
+
+                    b.Property<string>("CustomerEmail");
+
+                    b.Property<int?>("CustomerRequestLabNo");
+
+                    b.Property<string>("LinkName")
+                        .HasMaxLength(255);
+
+                    b.HasKey("FileName");
+
+                    b.HasIndex("CustomerEmail");
+
+                    b.HasIndex("CustomerRequestLabNo");
+
+                    b.ToTable("CustomerFile");
+                });
+
+            modelBuilder.Entity("UISWeb.Models.CustomerRequest", b =>
+                {
+                    b.Property<int>("LabNo");
+
+                    b.Property<bool>("Completed");
+
+                    b.Property<string>("Coordinator")
+                        .HasMaxLength(100);
+
+                    b.Property<int>("CustomerId");
+
+                    b.Property<string>("Detail")
+                        .HasMaxLength(100);
+
+                    b.Property<bool>("Invoiced");
+
+                    b.Property<DateTime>("Received");
+
+                    b.Property<DateTime>("Required");
+
+                    b.HasKey("LabNo");
+
+                    b.ToTable("CustomerRequest");
+                });
+
+            modelBuilder.Entity("UISWeb.Models.CustomerFile", b =>
+                {
+                    b.HasOne("UISWeb.Models.Customer")
+                        .WithMany("Reports")
+                        .HasForeignKey("CustomerEmail");
+
+                    b.HasOne("UISWeb.Models.CustomerRequest")
+                        .WithMany("Reports")
+                        .HasForeignKey("CustomerRequestLabNo");
+                });
 #pragma warning restore 612, 618
         }
     }

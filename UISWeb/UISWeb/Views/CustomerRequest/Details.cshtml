@@ -1,0 +1,60 @@
+﻿@model UISWeb.Models.CustomerRequest
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>CustomerRequest</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.CustomerId)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.CustomerId)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Coordinator)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Coordinator)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Detail)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Detail)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Received)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Received)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Required)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Required)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Completed)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Completed)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Invoiced)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Invoiced)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.LabNo">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>

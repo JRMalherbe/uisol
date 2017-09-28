@@ -7,22 +7,88 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using UISWeb.Data;
 using UISWeb.Models;
+using Microsoft.Extensions.Options;
+using System.Net.Http;
+using System.Text;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authorization;
+using Newtonsoft.Json;
 
 namespace UISWeb.Controllers
 {
+    [Authorize]
     public class ClientController : Controller
     {
         private readonly UISWebContext _context;
+        private readonly UISConfig _config;
+        private static HttpClient _client = new HttpClient();
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public ClientController(UISWebContext context)
+        public ClientController(
+            UISWebContext context, 
+            UserManager<ApplicationUser> userManager, 
+            IOptions<UISConfig> config)
         {
             _context = context;
+            _config = config.Value;
+            _userManager = userManager;
         }
 
         // GET: Client
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Client.ToListAsync());
+            //_context.Database.Migrate();
+            //_context.Database.EnsureCreated();
+
+            List<Client> clientList = new List<Client>();
+            System.Security.Claims.ClaimsPrincipal currentUser = this.User;
+            bool IsAdmin = currentUser.IsInRole("Admin");
+            var id = _userManager.GetUserId(this.User); // Get user id:
+            var user = await _userManager.GetUserAsync(User);
+            var email = user.Email;
+
+            string url = _config.ServiceRoot + "api/Customer/" + Convert.ToBase64String(Encoding.ASCII.GetBytes(email));
+            if (IsAdmin)
+                url = _config.ServiceRoot + "api/Customer";
+            HttpResponseMessage result = _client.GetAsync(url).Result;
+            string body = "";
+            if (result.IsSuccessStatusCode)
+            {
+                body = result.Content.ReadAsStringAsync().Result;
+
+                /*{{
+                "Email": "james.malherbe@gmail.com",
+                "ContactName": "Vanessa Talbot",
+                "CompanyName": "Talbot & Talbot",
+                "ClientId": 79,
+                "Reports": null
+                }}*/
+
+                Client client = JsonConvert.DeserializeObject<Client>(body);
+                clientList.Add(client);
+                /*
+                dynamic data = Newtonsoft.Json.Linq.JObject.Parse(body);
+                string test1 = data["Email"].ToString();
+                string test2 = data["ContactName"].ToString();
+                string test3 = data["CompanyName"].ToString();
+                string test4 = data["ClientId"].ToString();
+                */
+
+                /*
+                string cnt = data["odata.count"] != null ? data["odata.count"].ToString() : "";
+                double cntVal = Convert.ToDouble(cnt);
+                Newtonsoft.Json.Linq.JToken items = data["value"];
+                if (items.Count() > 0)
+                {
+                    foreach (Newtonsoft.Json.Linq.JObject row in items.Children())
+                    {
+                        string rawdate = row["Created"].ToString();
+                    }
+                }
+                */
+            }
+            return View(clientList);
+            //return View(await _context.Client.ToListAsync());
         }
 
         // GET: Client/Details/5
