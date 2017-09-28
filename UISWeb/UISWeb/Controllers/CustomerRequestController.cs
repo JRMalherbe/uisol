@@ -44,8 +44,8 @@ namespace UISWeb.Controllers
             var email = user.Email;
 
             string url = _config.ServiceRoot + "api/Customer/" + Convert.ToBase64String(Encoding.ASCII.GetBytes(email)) + "/Reports";
-            if (IsAdmin)
-                url = _config.ServiceRoot + "api/Customer/" + email + "/Reports";
+            //if (IsAdmin)
+            //    url = _config.ServiceRoot + "api/Customer/" + email + "/Reports";
             HttpResponseMessage result = _client.GetAsync(url).Result;
             string body = "";
             if (result.IsSuccessStatusCode)
@@ -61,13 +61,33 @@ namespace UISWeb.Controllers
         // GET: CustomerRequest/Details/5
         public async Task<IActionResult> Details(int? id)
         {
+            CustomerRequest customerRequest = null;
+
             if (id == null)
             {
                 return NotFound();
             }
 
-            var customerRequest = await _context.CustomerRequest
-                .SingleOrDefaultAsync(m => m.LabNo == id);
+            System.Security.Claims.ClaimsPrincipal currentUser = this.User;
+            bool IsAdmin = currentUser.IsInRole("Admin");
+            //var userId = _userManager.GetUserId(this.User); // Get user id:
+            var user = await _userManager.GetUserAsync(this.User);
+            var email = user.Email;
+
+            string url = "";
+            string body = "";
+            HttpResponseMessage result = null;
+            url = _config.ServiceRoot + "api/Customer/" + Convert.ToBase64String(Encoding.ASCII.GetBytes(email)) + "/Reports/" + id.ToString();
+            //if (IsAdmin)
+            //    url = _config.ServiceRoot + "api/Customer/" + email + "/Reports/" + labno.ToString();
+            result = _client.GetAsync(url).Result;
+            body = "";
+            if (result.IsSuccessStatusCode)
+            {
+                body = result.Content.ReadAsStringAsync().Result;
+                customerRequest = JsonConvert.DeserializeObject<CustomerRequest>(body);
+            }
+
             if (customerRequest == null)
             {
                 return NotFound();

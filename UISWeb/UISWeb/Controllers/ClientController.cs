@@ -41,8 +41,8 @@ namespace UISWeb.Controllers
 
             System.Security.Claims.ClaimsPrincipal currentUser = this.User;
             bool IsAdmin = currentUser.IsInRole("Admin");
-            var id = _userManager.GetUserId(this.User); // Get user id:
-            var user = await _userManager.GetUserAsync(User);
+            //var id = _userManager.GetUserId(this.User); // Get user id:
+            var user = await _userManager.GetUserAsync(this.User);
             var email = user.Email;
 
             string url = _config.ServiceRoot + "api/Customer/" + Convert.ToBase64String(Encoding.ASCII.GetBytes(email));

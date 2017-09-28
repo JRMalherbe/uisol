@@ -39,7 +39,7 @@ namespace UISWeb.Controllers
 
             System.Security.Claims.ClaimsPrincipal currentUser = this.User;
             bool IsAdmin = currentUser.IsInRole("Admin");
-            var id = _userManager.GetUserId(this.User); // Get user id:
+            //var id = _userManager.GetUserId(this.User); // Get user id:
             var user = await _userManager.GetUserAsync(User);
             var email = user.Email;
 
