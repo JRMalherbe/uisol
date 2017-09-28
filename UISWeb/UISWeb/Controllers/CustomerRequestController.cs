@@ -7,22 +7,55 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using UISWeb.Data;
 using UISWeb.Models;
+using System.Net.Http;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Options;
+using System.Text;
+using Newtonsoft.Json;
 
 namespace UISWeb.Controllers
 {
     public class CustomerRequestController : Controller
     {
         private readonly UISWebContext _context;
+        private readonly UISConfig _config;
+        private static HttpClient _client = new HttpClient();
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public CustomerRequestController(UISWebContext context)
+        public CustomerRequestController(
+            UISWebContext context,
+            UserManager<ApplicationUser> userManager,
+            IOptions<UISConfig> config)
         {
             _context = context;
+            _config = config.Value;
+            _userManager = userManager;
         }
 
         // GET: CustomerRequest
         public async Task<IActionResult> Index()
         {
-            return View(await _context.CustomerRequest.ToListAsync());
+            List<CustomerRequest> customerRequests = new List<CustomerRequest>();
+
+            System.Security.Claims.ClaimsPrincipal currentUser = this.User;
+            bool IsAdmin = currentUser.IsInRole("Admin");
+            var id = _userManager.GetUserId(this.User); // Get user id:
+            var user = await _userManager.GetUserAsync(User);
+            var email = user.Email;
+
+            string url = _config.ServiceRoot + "api/Customer/" + Convert.ToBase64String(Encoding.ASCII.GetBytes(email)) + "/Reports";
+            if (IsAdmin)
+                url = _config.ServiceRoot + "api/Customer/" + email + "/Reports";
+            HttpResponseMessage result = _client.GetAsync(url).Result;
+            string body = "";
+            if (result.IsSuccessStatusCode)
+            {
+                body = result.Content.ReadAsStringAsync().Result;
+                customerRequests = JsonConvert.DeserializeObject<List<CustomerRequest>>(body);
+            }
+
+            return View(customerRequests);
+            //return View(await _context.CustomerRequest.ToListAsync());
         }
 
         // GET: CustomerRequest/Details/5

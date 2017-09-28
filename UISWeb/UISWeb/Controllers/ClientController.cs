@@ -37,10 +37,8 @@ namespace UISWeb.Controllers
         // GET: Client
         public async Task<IActionResult> Index()
         {
-            //_context.Database.Migrate();
-            //_context.Database.EnsureCreated();
-
             List<Client> clientList = new List<Client>();
+
             System.Security.Claims.ClaimsPrincipal currentUser = this.User;
             bool IsAdmin = currentUser.IsInRole("Admin");
             var id = _userManager.GetUserId(this.User); // Get user id:
