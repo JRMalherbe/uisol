@@ -1,0 +1,14 @@
+@using Microsoft.AspNetCore.Identity
+@using UISWeb.Models
+
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+
+@if (SignInManager.IsSignedIn(User))
+{
+    @if (User.IsInRole("Admin"))
+    {
+        <li><a asp-area="" asp-controller="Customer" asp-action="Index">Customer</a></li>
+    }
+    <li><a asp-area="" asp-controller="CustomerRequest" asp-action="Index">Reports</a></li>
+}

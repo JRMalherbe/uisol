@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 using System.Text;
 using Newtonsoft.Json;
+using System.IO;
 
 namespace UISWeb.Controllers
 {
@@ -106,6 +107,18 @@ namespace UISWeb.Controllers
             }
 
             return View(customerRequest);
+        }
+
+        public FileResult Download(string link, int labno)
+        {
+            CustomerFile customerFile = _context.CustomerFile.Where(x => x.CustomerRequestLabNo == labno && x.LinkName == link).SingleOrDefault();
+            //CustomerFile customerFile = _context.CustomerFile.Where(x => x.LinkName == link).SingleOrDefault();
+            string fileName = "Not Found.pdf";
+            if (customerFile != null)
+                fileName = customerFile.FileName;
+            string filePath = _config.ReportPath + fileName;
+            byte[] fileBytes = System.IO.File.ReadAllBytes(filePath);
+            return File(fileBytes, System.Net.Mime.MediaTypeNames.Application.Octet, fileName);
         }
 
         // GET: CustomerRequest/Create

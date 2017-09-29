@@ -53,37 +53,15 @@ namespace UISWeb.Controllers
             if (result.IsSuccessStatusCode)
             {
                 body = result.Content.ReadAsStringAsync().Result;
-
-                /*{{
-                "Email": "james.malherbe@gmail.com",
-                "ContactName": "Vanessa Talbot",
-                "CompanyName": "Talbot & Talbot",
-                "ClientId": 79,
-                "Reports": null
-                }}*/
-
-                Client client = JsonConvert.DeserializeObject<Client>(body);
-                clientList.Add(client);
-                /*
-                dynamic data = Newtonsoft.Json.Linq.JObject.Parse(body);
-                string test1 = data["Email"].ToString();
-                string test2 = data["ContactName"].ToString();
-                string test3 = data["CompanyName"].ToString();
-                string test4 = data["ClientId"].ToString();
-                */
-
-                /*
-                string cnt = data["odata.count"] != null ? data["odata.count"].ToString() : "";
-                double cntVal = Convert.ToDouble(cnt);
-                Newtonsoft.Json.Linq.JToken items = data["value"];
-                if (items.Count() > 0)
+                if (IsAdmin)
                 {
-                    foreach (Newtonsoft.Json.Linq.JObject row in items.Children())
-                    {
-                        string rawdate = row["Created"].ToString();
-                    }
+                    clientList = JsonConvert.DeserializeObject<List<Client>>(body);
                 }
-                */
+                else
+                {
+                    Client client = JsonConvert.DeserializeObject<Client>(body);
+                    clientList.Add(client);
+                }
             }
             return View(clientList);
             //return View(await _context.Client.ToListAsync());

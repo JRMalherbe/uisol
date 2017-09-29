@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - UISWeb</title>
+    <title>@ViewData["Title"] - UIS Portal</title>
 
     <environment include="Development">
         <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
@@ -26,13 +26,14 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a asp-area="" asp-controller="Home" asp-action="Index" class="navbar-brand">UISWeb</a>
+                <a asp-area="" asp-controller="Home" asp-action="Index" class="navbar-brand">UIS Portal</a>
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
                     <li><a asp-area="" asp-controller="Home" asp-action="Index">Home</a></li>
-                    <li><a asp-area="" asp-controller="Client" asp-action="Index">Client</a></li>
-                    <li><a asp-area="" asp-controller="CustomerRequest" asp-action="Index">Reports</a></li>
+                    @await Html.PartialAsync("_RoleBasedItemsPartial")
+                    <!--<li><a asp-area="" asp-controller="Client" asp-action="Index">Client</a></li>-->
+                    <!--<li><a asp-area="" asp-controller="CustomerRequest" asp-action="Index">Reports</a></li>-->
                     <li><a asp-area="" asp-controller="Home" asp-action="About">About</a></li>
                     <li><a asp-area="" asp-controller="Home" asp-action="Contact">Contact</a></li>
                 </ul>
@@ -44,7 +45,7 @@
         @RenderBody()
         <hr />
         <footer>
-            <p>&copy; 2017 - UISWeb</p>
+            <p>&copy; 2017 - UIS Organic Laboratory</p>
         </footer>
     </div>
 

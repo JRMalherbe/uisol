@@ -53,8 +53,15 @@
             @Html.DisplayFor(model => model.Invoiced)
         </dd>
     </dl>
+    <h4>Available Downloads</h4>
+    <ul>
+        @foreach (var report in @Model.Reports)
+        {
+            <li><a asp-action="Download" asp-route-link="@report.LinkName" asp-route-labno="@Model.LabNo">@report.FileName</a></li>
+        }
+    </ul>
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model.LabNo">Edit</a> |
+    <!--<a asp-action="Edit" asp-route-id="@Model.LabNo">Edit</a> |-->
     <a asp-action="Index">Back to List</a>
 </div>

@@ -51,8 +51,15 @@ namespace UISWeb.Controllers
             if (result.IsSuccessStatusCode)
             {
                 body = result.Content.ReadAsStringAsync().Result;
-                Customer customer = JsonConvert.DeserializeObject<Customer>(body);
-                clientList.Add(customer);
+                if (IsAdmin)
+                {
+                    clientList = JsonConvert.DeserializeObject<List<Customer>>(body);
+                }
+                else
+                {
+                    Customer customer = JsonConvert.DeserializeObject<Customer>(body);
+                    clientList.Add(customer);
+                }
             }
             return View(clientList);
             //return View(await _context.Customer.ToListAsync());

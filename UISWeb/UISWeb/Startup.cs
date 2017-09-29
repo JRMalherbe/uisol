@@ -46,7 +46,7 @@ namespace UISWeb
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, IServiceProvider serviceProvider)
         {
             if (env.IsDevelopment())
             {
@@ -76,6 +76,28 @@ namespace UISWeb
                 var dbContext = serviceScope.ServiceProvider.GetService<UISWebContext>();
                 dbContext.Database.EnsureCreated();
             }
+
+            IdentityResult roleResult;
+            var RoleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+            bool roleExist = false;
+            roleExist = RoleManager.RoleExistsAsync("Admin").Result;
+            if (!roleExist)
+            {
+                roleResult = RoleManager.CreateAsync(new IdentityRole("Admin")).Result;
+            }
+            roleExist = RoleManager.RoleExistsAsync("user").Result;
+            if (!roleExist)
+            {
+                roleResult = RoleManager.CreateAsync(new IdentityRole("user")).Result;
+            }
+            /*
+            var UserManager = serviceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+            var _user = UserManager.FindByEmailAsync("james.malherbe@gmail.com").Result;
+            if (_user != null)
+            {
+                UserManager.AddToRoleAsync(_user, "Admin");
+            }
+            */
         }
     }
 }
