@@ -11,9 +11,10 @@ using UISWeb.Data;
 namespace UISWeb.Migrations
 {
     [DbContext(typeof(UISWebContext))]
-    partial class UISWebContextModelSnapshot : ModelSnapshot
+    [Migration("20170929062557_CascadeDelete")]
+    partial class CascadeDelete
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -64,12 +65,16 @@ namespace UISWeb.Migrations
                         .ValueGeneratedOnAdd()
                         .HasMaxLength(255);
 
+                    b.Property<string>("CustomerEmail");
+
                     b.Property<int>("CustomerRequestLabNo");
 
                     b.Property<string>("LinkName")
                         .HasMaxLength(255);
 
                     b.HasKey("FileName");
+
+                    b.HasIndex("CustomerEmail");
 
                     b.HasIndex("CustomerRequestLabNo");
 
@@ -103,6 +108,10 @@ namespace UISWeb.Migrations
 
             modelBuilder.Entity("UISWeb.Models.CustomerFile", b =>
                 {
+                    b.HasOne("UISWeb.Models.Customer")
+                        .WithMany("Reports")
+                        .HasForeignKey("CustomerEmail");
+
                     b.HasOne("UISWeb.Models.CustomerRequest", "Request")
                         .WithMany("Reports")
                         .HasForeignKey("CustomerRequestLabNo")

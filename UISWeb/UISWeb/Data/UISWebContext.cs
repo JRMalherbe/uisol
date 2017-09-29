@@ -14,18 +14,18 @@ namespace UISWeb.Data
         {
         }
 
-        protected override void OnModelCreating(ModelBuilder builder)
-        {
-            base.OnModelCreating(builder);
-            // Customize the ASP.NET Identity model and override the defaults if needed.
-            // For example, you can rename the ASP.NET Identity table names and more.
-            // Add your customizations after calling base.OnModelCreating(builder);
-        }
-
         public DbSet<Client> Client { get; set; }
         public DbSet<Customer> Customer { get; set; }
         public DbSet<CustomerRequest> CustomerRequest { get; set; }
         public DbSet<CustomerFile> CustomerFile { get; set; }
 
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            base.OnModelCreating(builder);
+            builder.Entity<CustomerFile>()
+                    .HasOne(f => f.Request)
+                    .WithMany(r => r.Reports)
+                    .OnDelete(DeleteBehavior.Cascade);
+        }
     }
 }

@@ -11,9 +11,10 @@ using UISWeb.Data;
 namespace UISWeb.Migrations
 {
     [DbContext(typeof(UISWebContext))]
-    partial class UISWebContextModelSnapshot : ModelSnapshot
+    [Migration("20170929065003_UpdateCustomer")]
+    partial class UpdateCustomer
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

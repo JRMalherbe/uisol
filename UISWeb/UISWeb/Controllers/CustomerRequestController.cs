@@ -84,8 +84,20 @@ namespace UISWeb.Controllers
             body = "";
             if (result.IsSuccessStatusCode)
             {
+                // Remove request - from local db
+                CustomerRequest req = _context.CustomerRequest.Find(id.Value);
+                if (req != null)
+                {
+                    _context.CustomerRequest.Remove(req);
+                    _context.SaveChanges();
+                }
+
+                // Replace request - from access db
                 body = result.Content.ReadAsStringAsync().Result;
                 customerRequest = JsonConvert.DeserializeObject<CustomerRequest>(body);
+                _context.CustomerRequest.Add(customerRequest);
+                _context.SaveChanges();
+
             }
 
             if (customerRequest == null)

@@ -17,6 +17,6 @@ namespace UISWeb.Models
         //[Key, DatabaseGenerated(DatabaseGeneratedOption.None)]
         public int ClientId { get; set; }
 
-        public virtual ICollection<CustomerFile> Reports { get; set; }
+        //public virtual ICollection<CustomerRequest> Reports { get; set; }
     }
 }
