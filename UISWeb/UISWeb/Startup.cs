@@ -33,7 +33,7 @@ namespace UISWeb
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
 
-            //string uiscontext = Configuration.GetConnectionString("UISDataConnection");
+            string uiscontext = Configuration.GetConnectionString("UISDataConnection");
             services.AddDbContext<UISWebContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("UISDataConnection")));
 
@@ -70,6 +70,7 @@ namespace UISWeb
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
 
+            /*
             var serviceScopeFactory = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>();
             using (var serviceScope = serviceScopeFactory.CreateScope())
             {
@@ -90,6 +91,7 @@ namespace UISWeb
             {
                 roleResult = RoleManager.CreateAsync(new IdentityRole("user")).Result;
             }
+            */
             /*
             var UserManager = serviceProvider.GetRequiredService<UserManager<ApplicationUser>>();
             var _user = UserManager.FindByEmailAsync("james.malherbe@gmail.com").Result;
