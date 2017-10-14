@@ -90,12 +90,45 @@ namespace UISOL.Controllers
                         Email = reader[3].ToString()
                     };
 
+                    string query = @"SELECT Requests.[LAB_NO], Requests.[REQUEST COORDINATOR ID], Requests.[DETAIL], Requests.[DATUM], Requests.[REQUIRED DATE], Requests.[AFGEHANDEL], Requests.[INVOICED], Requests.[CUST ID],
+C.[CONTACT NAME],
+P.[TotalPreps], P.[1stPrep], P.[2ndPrep], P.[Completed], p.[MS], p.[FID]
+FROM(Requests
+LEFT JOIN Customers AS C ON C.ID = Requests.[CUST ID])
+LEFT JOIN(SELECT[Assigned hours].LAB_NO,
+COUNT(*) AS [TotalPreps],
+SUM(iif([Assigned hours].[1st_Prep_Completed] = True,1,0)) AS[1stPrep], 
+SUM(iif([Assigned hours].[2nd_Prep_Completed] = True, 1, 0)) AS[2ndPrep], 
+SUM(iif([Assigned hours].[Processed_Completed] = True, 1, 0)) AS[Completed], 
+MAX([Assigned hours].Loaded_MS) AS[MS], 
+MAX([Assigned hours].Loaded_FID) AS[FID]
+FROM[Assigned hours]
+WHERE[Assigned hours].LAB_NO IS NOT NULL
+GROUP BY[Assigned hours].LAB_NO) AS P ON P.LAB_NO = Requests.LAB_NO
+WHERE Requests.[CUST ID] IN({{=CustomerIds}})
+ORDER BY Requests.DATUM DESC";
+
                     reader = null;
                     CustomerRequest request = null;
-                    command = new OleDbCommand("SELECT [LAB_NO], [REQUEST COORDINATOR ID], [DETAIL], [DATUM], [REQUIRED DATE], [AFGEHANDEL], [INVOICED], [CUST ID] from Requests where [CUST ID] = " + customer.ClientId.ToString(), connection);
+                    //command = new OleDbCommand("SELECT [LAB_NO], [REQUEST COORDINATOR ID], [DETAIL], [DATUM], [REQUIRED DATE], [AFGEHANDEL], [INVOICED], [CUST ID] from Requests where [CUST ID] = " + customer.ClientId.ToString(), connection);
+                    command = new OleDbCommand(query.Replace("{{=CustomerIds}}", customer.ClientId.ToString()), connection);
                     reader = command.ExecuteReader();
                     while (reader.Read())
                     {
+                        /*
+                        t1 = reader[9].ToString();//total
+                        t1 = reader[10].ToString();//1st
+                        t1 = reader[11].ToString();//2nd
+                        t1 = reader[12].ToString();//Completed
+                        */
+                        int tempProgress = 0;
+                        if (!String.IsNullOrEmpty(reader[9].ToString())) {
+                            decimal tempTotal = Int32.Parse(reader[9].ToString());
+                            decimal tempValue = Int32.Parse(reader[12].ToString());
+                            if (tempTotal > 0)
+                                tempProgress = (Int32)Math.Round(((tempValue * 100) / tempTotal),0);
+                        }
+
                         request = new CustomerRequest()
                         {
                             LabNo = Int32.Parse(reader[0].ToString()),
@@ -106,6 +139,10 @@ namespace UISOL.Controllers
                             Completed = Boolean.Parse(reader[5].ToString()),
                             Invoiced = Boolean.Parse(reader[6].ToString()),
                             CustomerId = customer.ClientId,
+                            CustomerName = reader[8].ToString(),
+                            LoadedMS = reader[13].ToString(),
+                            LoadedFID = reader[14].ToString(),
+                            Progress = tempProgress,
                             Reports = new List<CustomerFile>()
                         };
                         reports.Add(request);
@@ -139,11 +176,45 @@ namespace UISOL.Controllers
                         Email = reader[3].ToString()
                     };
 
+                    string query = @"SELECT Requests.[LAB_NO], Requests.[REQUEST COORDINATOR ID], Requests.[DETAIL], Requests.[DATUM], Requests.[REQUIRED DATE], Requests.[AFGEHANDEL], Requests.[INVOICED], Requests.[CUST ID], 
+C.[CONTACT NAME], 
+P.[TotalPreps], P.[1stPrep], P.[2ndPrep], P.[Completed], p.[MS], p.[FID] 
+FROM(Requests 
+LEFT JOIN Customers AS C ON C.ID = Requests.[CUST ID]) 
+LEFT JOIN(SELECT[Assigned hours].LAB_NO, 
+COUNT(*) AS [TotalPreps], 
+SUM(iif([Assigned hours].[1st_Prep_Completed] = True,1,0)) AS [1stPrep], 
+SUM(iif([Assigned hours].[2nd_Prep_Completed] = True, 1, 0)) AS [2ndPrep], 
+SUM(iif([Assigned hours].[Processed_Completed] = True, 1, 0)) AS [Completed], 
+MAX([Assigned hours].Loaded_MS) AS [MS], 
+MAX([Assigned hours].Loaded_FID) AS [FID] 
+FROM[Assigned hours] 
+WHERE[Assigned hours].LAB_NO IS NOT NULL 
+GROUP BY[Assigned hours].LAB_NO) AS P ON P.LAB_NO = Requests.LAB_NO 
+WHERE Requests.[CUST ID] IN ({{=CustomerIds}}) AND Requests.[LAB_NO] = {{=LabNo}} 
+ORDER BY Requests.DATUM DESC";
+
                     reader = null;
-                    command = new OleDbCommand("SELECT [LAB_NO], [REQUEST COORDINATOR ID], [DETAIL], [DATUM], [REQUIRED DATE], [AFGEHANDEL], [INVOICED], [CUST ID] from Requests where [CUST ID] = " + customer.ClientId.ToString() + " and [LAB_NO] = " + labno.ToString(), connection);
+                    //command = new OleDbCommand("SELECT [LAB_NO], [REQUEST COORDINATOR ID], [DETAIL], [DATUM], [REQUIRED DATE], [AFGEHANDEL], [INVOICED], [CUST ID] from Requests where [CUST ID] = " + customer.ClientId.ToString() + " and [LAB_NO] = " + labno.ToString(), connection);
+                    command = new OleDbCommand(query.Replace("{{=CustomerIds}}", customer.ClientId.ToString()).Replace("{{=LabNo}}", labno.ToString()), connection);
                     reader = command.ExecuteReader();
                     if (reader.Read())
                     {
+                        /*
+                        t1 = reader[9].ToString();//total
+                        t1 = reader[10].ToString();//1st
+                        t1 = reader[11].ToString();//2nd
+                        t1 = reader[12].ToString();//Completed
+                        */
+                        int tempProgress = 0;
+                        if (!String.IsNullOrEmpty(reader[9].ToString()))
+                        {
+                            decimal tempTotal = Int32.Parse(reader[9].ToString());
+                            decimal tempValue = Int32.Parse(reader[12].ToString());
+                            if (tempTotal > 0)
+                                tempProgress = (Int32)Math.Round(((tempValue * 100) / tempTotal), 0);
+                        }
+
                         request = new CustomerRequest()
                         {
                             LabNo = Int32.Parse(reader[0].ToString()),
@@ -154,6 +225,10 @@ namespace UISOL.Controllers
                             Completed = Boolean.Parse(reader[5].ToString()),
                             Invoiced = Boolean.Parse(reader[6].ToString()),
                             CustomerId = customer.ClientId,
+                            CustomerName = reader[8].ToString(),
+                            LoadedMS = reader[13].ToString(),
+                            LoadedFID = reader[14].ToString(),
+                            Progress = tempProgress,
                             Reports = new List<CustomerFile>()
                         };
                         string reportPath = ConfigurationManager.AppSettings["ReportPath"];

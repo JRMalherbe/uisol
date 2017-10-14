@@ -14,22 +14,25 @@
     <thead>
         <tr>
                 <th>
-                    @Html.DisplayNameFor(model => model.CustomerId)
+                    @Html.DisplayNameFor(model => model.LabNo)
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.Coordinator)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Detail)
+                    @Html.DisplayNameFor(model => model.CustomerName)
                 </th>
                 <th>
                     @Html.DisplayNameFor(model => model.Received)
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.Required)
+                    @Html.DisplayNameFor(model => model.Detail)
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.Completed)
+                    @Html.DisplayNameFor(model => model.LoadedMS)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.LoadedFID)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Progress)
                 </th>
                 <th>
                     @Html.DisplayNameFor(model => model.Invoiced)
@@ -41,22 +44,25 @@
 @foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.CustomerId)
+                @Html.DisplayFor(modelItem => item.LabNo)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Coordinator)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Detail)
+                @Html.DisplayFor(modelItem => item.CustomerName)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Received)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Required)
+                @Html.DisplayFor(modelItem => item.Detail)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Completed)
+                @Html.DisplayFor(modelItem => item.LoadedMS)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.LoadedFID)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Progress)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Invoiced)

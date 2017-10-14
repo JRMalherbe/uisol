@@ -20,7 +20,11 @@ namespace UISWeb.Models
         public DateTime Required { get; set; }
         public bool Completed { get; set; }
         public bool Invoiced { get; set; }
-
+        public string CustomerName { get; set; }
+        public string LoadedMS { get; set; }
+        public string LoadedFID { get; set; }
+        public int Progress { get; set; }
+        
         public virtual ICollection<CustomerFile> Reports { get; set; }
     }
 }
