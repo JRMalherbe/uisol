@@ -22,10 +22,6 @@ namespace UISWeb.Migrations
 
             modelBuilder.Entity("UISWeb.Models.Client", b =>
                 {
-                    b.Property<string>("Email")
-                        .ValueGeneratedOnAdd()
-                        .HasMaxLength(255);
-
                     b.Property<int>("ClientId");
 
                     b.Property<string>("CompanyName")
@@ -34,9 +30,26 @@ namespace UISWeb.Migrations
                     b.Property<string>("ContactName")
                         .HasMaxLength(255);
 
-                    b.HasKey("Email");
+                    b.Property<string>("Email")
+                        .HasMaxLength(255);
+
+                    b.HasKey("ClientId");
 
                     b.ToTable("Client");
+                });
+
+            modelBuilder.Entity("UISWeb.Models.ClientUser", b =>
+                {
+                    b.Property<int>("ClientId");
+
+                    b.Property<string>("UserEmail")
+                        .HasMaxLength(255);
+
+                    b.HasKey("ClientId", "UserEmail");
+
+                    b.HasIndex("UserEmail");
+
+                    b.ToTable("ClientUser");
                 });
 
             modelBuilder.Entity("UISWeb.Models.Customer", b =>
@@ -107,6 +120,30 @@ namespace UISWeb.Migrations
                     b.HasKey("LabNo");
 
                     b.ToTable("CustomerRequest");
+                });
+
+            modelBuilder.Entity("UISWeb.Models.User", b =>
+                {
+                    b.Property<string>("Email")
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(255);
+
+                    b.HasKey("Email");
+
+                    b.ToTable("User");
+                });
+
+            modelBuilder.Entity("UISWeb.Models.ClientUser", b =>
+                {
+                    b.HasOne("UISWeb.Models.Client", "Client")
+                        .WithMany("Users")
+                        .HasForeignKey("ClientId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("UISWeb.Models.User", "User")
+                        .WithMany("Clients")
+                        .HasForeignKey("UserEmail")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("UISWeb.Models.CustomerFile", b =>

@@ -44,6 +44,9 @@ namespace UISWeb.Controllers
             var user = await _userManager.GetUserAsync(User);
             var email = user.Email;
 
+            Int32[] arrIds = _context.ClientUser.Where(x => x.UserEmail == email).Select(x => x.ClientId).ToArray<Int32>();
+            string clientIds = string.Join(",", arrIds);
+
             string url = _config.ServiceRoot + "api/Customer/" + Convert.ToBase64String(Encoding.ASCII.GetBytes(email)) + "/Reports";
             //if (IsAdmin)
             //    url = _config.ServiceRoot + "api/Customer/" + email + "/Reports";
@@ -74,6 +77,9 @@ namespace UISWeb.Controllers
             //var userId = _userManager.GetUserId(this.User); // Get user id:
             var user = await _userManager.GetUserAsync(this.User);
             var email = user.Email;
+
+            Int32[] arrIds = _context.ClientUser.Where(x => x.UserEmail == email).Select(x => x.ClientId).ToArray<Int32>();
+            string clientIds = string.Join(",", arrIds);
 
             string url = "";
             string body = "";

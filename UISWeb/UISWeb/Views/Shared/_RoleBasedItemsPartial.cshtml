@@ -8,7 +8,8 @@
 {
     @if (User.IsInRole("Admin"))
     {
-        <li><a asp-area="" asp-controller="Customer" asp-action="Index">Customer</a></li>
+        <li><a asp-area="" asp-controller="User" asp-action="Index">User</a></li>
+        <li><a asp-area="" asp-controller="Client" asp-action="Index">Client</a></li>
     }
     <li><a asp-area="" asp-controller="CustomerRequest" asp-action="Index">Reports</a></li>
 }

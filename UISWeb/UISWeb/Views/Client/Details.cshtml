@@ -1,4 +1,4 @@
-﻿@model UISWeb.Models.Client
+﻿@model UISWeb.Models.ClientUser
 
 @{
     ViewData["Title"] = "Details";
@@ -6,31 +6,73 @@
 
 <h2>Details</h2>
 
+<form asp-action="AddUser">
+    <input type="hidden" asp-for="Client.ClientId" />
+    <div>
+        <h4>Client</h4>
+        <hr />
+        <dl class="dl-horizontal">
+            <dt>
+                @Html.DisplayNameFor(model => model.Client.Email)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.Client.Email)
+            </dd>
+            <dt>
+                @Html.DisplayNameFor(model => model.Client.ContactName)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.Client.ContactName)
+            </dd>
+            <dt>
+                @Html.DisplayNameFor(model => model.Client.CompanyName)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.Client.CompanyName)
+            </dd>
+        </dl>
+    </div>
+    <h4>Users</h4>
+    <table class="table">
+        <thead>
+            <tr>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th>
+                    User Emmail
+                </th>
+                <th>
+
+                </th>
+            </tr>
+            @foreach (var item in Model.Client.Users)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.UserEmail)
+                    </td>
+                    <td>
+                        <a asp-action="RemoveEmail" asp-route-userEmail="@item.UserEmail" asp-route-clientId="@item.ClientId">Remove</a>
+                    </td>
+                </tr>
+            }
+            <tr>
+                <td>
+                    <input asp-for="UserEmail" class="form-control" />
+                </td>
+                <td>
+                    <input type="submit" value="Add User" class="btn btn-default" />
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</form>
+
 <div>
-    <h4>Client</h4>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.ContactName)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.ContactName)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.CompanyName)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.CompanyName)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.ClientId)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.ClientId)
-        </dd>
-    </dl>
-</div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model.Email">Edit</a> |
+    <a asp-action="Edit" asp-route-id="@Model.ClientId">Edit</a> |
     <a asp-action="Index">Back to List</a>
 </div>
+

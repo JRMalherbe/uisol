@@ -11,8 +11,8 @@ using UISWeb.Data;
 namespace UISWeb.Migrations
 {
     [DbContext(typeof(UISWebContext))]
-    [Migration("20170928134226_NewEntitiesAdded")]
-    partial class NewEntitiesAdded
+    [Migration("20171028085221_Start")]
+    partial class Start
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -23,11 +23,7 @@ namespace UISWeb.Migrations
 
             modelBuilder.Entity("UISWeb.Models.Client", b =>
                 {
-                    b.Property<string>("Email")
-                        .ValueGeneratedOnAdd()
-                        .HasMaxLength(255);
-
-                    b.Property<int>("ClientId");
+                    b.Property<int>("Id");
 
                     b.Property<string>("CompanyName")
                         .HasMaxLength(255);
@@ -35,9 +31,26 @@ namespace UISWeb.Migrations
                     b.Property<string>("ContactName")
                         .HasMaxLength(255);
 
-                    b.HasKey("Email");
+                    b.Property<string>("Email")
+                        .HasMaxLength(255);
+
+                    b.HasKey("Id");
 
                     b.ToTable("Client");
+                });
+
+            modelBuilder.Entity("UISWeb.Models.ClientUser", b =>
+                {
+                    b.Property<int>("ClientId");
+
+                    b.Property<string>("UserEmail")
+                        .HasMaxLength(255);
+
+                    b.HasKey("ClientId", "UserEmail");
+
+                    b.HasIndex("UserEmail");
+
+                    b.ToTable("ClientUser");
                 });
 
             modelBuilder.Entity("UISWeb.Models.Customer", b =>
@@ -65,16 +78,12 @@ namespace UISWeb.Migrations
                         .ValueGeneratedOnAdd()
                         .HasMaxLength(255);
 
-                    b.Property<string>("CustomerEmail");
-
-                    b.Property<int?>("CustomerRequestLabNo");
+                    b.Property<int>("CustomerRequestLabNo");
 
                     b.Property<string>("LinkName")
                         .HasMaxLength(255);
 
                     b.HasKey("FileName");
-
-                    b.HasIndex("CustomerEmail");
 
                     b.HasIndex("CustomerRequestLabNo");
 
@@ -92,10 +101,18 @@ namespace UISWeb.Migrations
 
                     b.Property<int>("CustomerId");
 
+                    b.Property<string>("CustomerName");
+
                     b.Property<string>("Detail")
                         .HasMaxLength(100);
 
                     b.Property<bool>("Invoiced");
+
+                    b.Property<string>("LoadedFID");
+
+                    b.Property<string>("LoadedMS");
+
+                    b.Property<int>("Progress");
 
                     b.Property<DateTime>("Received");
 
@@ -106,15 +123,36 @@ namespace UISWeb.Migrations
                     b.ToTable("CustomerRequest");
                 });
 
+            modelBuilder.Entity("UISWeb.Models.User", b =>
+                {
+                    b.Property<string>("Email")
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(255);
+
+                    b.HasKey("Email");
+
+                    b.ToTable("User");
+                });
+
+            modelBuilder.Entity("UISWeb.Models.ClientUser", b =>
+                {
+                    b.HasOne("UISWeb.Models.Client", "Client")
+                        .WithMany("Users")
+                        .HasForeignKey("ClientId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("UISWeb.Models.User", "User")
+                        .WithMany("Clients")
+                        .HasForeignKey("UserEmail")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
             modelBuilder.Entity("UISWeb.Models.CustomerFile", b =>
                 {
-                    b.HasOne("UISWeb.Models.Customer")
+                    b.HasOne("UISWeb.Models.CustomerRequest", "Request")
                         .WithMany("Reports")
-                        .HasForeignKey("CustomerEmail");
-
-                    b.HasOne("UISWeb.Models.CustomerRequest")
-                        .WithMany("Reports")
-                        .HasForeignKey("CustomerRequestLabNo");
+                        .HasForeignKey("CustomerRequestLabNo")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 #pragma warning restore 612, 618
         }

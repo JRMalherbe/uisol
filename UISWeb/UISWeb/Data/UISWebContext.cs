@@ -15,9 +15,11 @@ namespace UISWeb.Data
         }
 
         public DbSet<Client> Client { get; set; }
+        public DbSet<ClientUser> ClientUser { get; set; }
         public DbSet<Customer> Customer { get; set; }
         public DbSet<CustomerRequest> CustomerRequest { get; set; }
         public DbSet<CustomerFile> CustomerFile { get; set; }
+        public DbSet<User> User { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -26,6 +28,20 @@ namespace UISWeb.Data
                     .HasOne(f => f.Request)
                     .WithMany(r => r.Reports)
                     .OnDelete(DeleteBehavior.Cascade);
+
+            builder.Entity<ClientUser>()
+                    .HasKey(bc => new { bc.ClientId, bc.UserEmail });
+
+            builder.Entity<ClientUser>()
+                .HasOne(bc => bc.Client)
+                .WithMany(b => b.Users)
+                .HasForeignKey(bc => bc.ClientId);
+
+            builder.Entity<ClientUser>()
+                .HasOne(bc => bc.User)
+                .WithMany(c => c.Clients)
+                .HasForeignKey(bc => bc.UserEmail);
+
         }
     }
 }
